@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Common\ApiException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -44,10 +46,25 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ApiException) {
+            return $this->jsonResponse([
+                'error' => [
+                    'code' => $exception->getApiErrorCode(),
+                    'message' => $exception->getMessage(),
+                ],
+            ], $exception->getHttpStatusCode());
+        }
         return parent::render($request, $exception);
+    }
+
+    private function jsonResponse(array $payload, int $statusCode): JsonResponse
+    {
+        $payload = $payload ?: [];
+
+        return response()->json($payload, $statusCode);
     }
 }
