@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
 
 /*
@@ -18,3 +19,6 @@ Route::middleware('auth:api')->get('/users', function (Request $request) {
 });
 
 Route::post('/users', 'UserController@store');
+
+Route::post('/login', 'LoginController@login');
+Route::post('/login/refresh', 'LoginController@refresh');
