@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Common\JsonResponder;
 use App\JoggingTime;
 use Illuminate\Http\Request;
 
@@ -17,15 +18,19 @@ class JoggingTimeController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request, JoggingTime\JoggingTimeTransformer $joggingTimeTransformer)
     {
-        //
+        $data = $request->validate([
+            'distance' => 'required|integer|min:1',
+            'seconds' => 'required|integer|min:1',
+            'day' => 'date|date_format:Y-m-d|before:tomorrow',
+        ]);
+
+        $joggingTime = new JoggingTime($data);
+        $joggingTime->user_id = \Auth::user()->id;
+        $joggingTime->save();
+
+        return JsonResponder::respond($joggingTime, $joggingTimeTransformer);
     }
 
     /**
