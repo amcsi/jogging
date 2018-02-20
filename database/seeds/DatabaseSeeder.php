@@ -15,16 +15,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class, 50)->create()->each(function (User $user) {
+        $joggingTimes = [];
+
+        // Create many users.
+        factory(User::class, 50)->create()->each(function (User $user) use (&$joggingTimes) {
+            if ($user->id == 1) {
+                // The first user should have a fixed email for demoing purposes.
+                $user->email = 'admin@example.com';
+                $user->save();
+            }
             $date = Carbon::now();
-            $joggingTimes = new Collection();
+            // Prepare the jogging times for each user.
+            // Each date entry for each jogging time of a user will be from "today" counting backwards one day each.
             for ($i = 0; $i < 30; $i++) {
+                if (random_int(1, 5) <= 2) {
+                    // 2 in 5 chance to leave a gap in jogging times.
+                    continue;
+                }
                 $_date = clone $date;
                 $_date->subDays($i);
-                $joggingTime = factory(JoggingTime::class)->make(['day' => $_date->format('Y-m-d')]);
-                $joggingTimes->push($joggingTime);
+                $joggingTime = factory(JoggingTime::class)->make([
+                    'user_id' => $user->id,
+                    'day' => $_date->format('Y-m-d')
+                ])->toArray();
+                $joggingTimes[] = $joggingTime;
             }
-            $user->joggingTimes()->saveMany($joggingTimes);
         });
+        // This is the maximum chunk size that the seems to be accepted by the database.
+        $chunkSize = 249;
+
+        // Insert the many jogging times in chunks.
+        foreach (array_chunk($joggingTimes, $chunkSize) as $joggingTimesChunk) {
+            JoggingTime::insert($joggingTimesChunk);
+        }
     }
 }
