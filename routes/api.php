@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/users', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    Route::post('/jogging-times', 'JoggingTimeController@store');
 });
 
 Route::post('/users', 'UserController@store');
