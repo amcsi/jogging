@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Common\JsonResponder;
+use App\Http\Requests\PagingRequest;
 use App\JoggingTime;
 use App\JoggingTime\JoggingTimeTransformer;
 use Illuminate\Http\Request;
@@ -10,17 +11,12 @@ use Illuminate\Http\Response;
 
 class JoggingTimeController extends Controller
 {
-    private const DEFAULT_LIMIT = 10;
-
     /**
      * Display a listing of the resource.
      */
-    public function index(JoggingTimeTransformer $joggingTimeTransformer, Request $request)
+    public function index(JoggingTimeTransformer $joggingTimeTransformer, PagingRequest $request)
     {
-        $limit = max(1, min(100, $request['limit'] ?: self::DEFAULT_LIMIT));
-        $page = $request['page'] ?: 1;
-
-        $joggingTimes = JoggingTime::where('user_id', $request->user()->id)->paginate($limit, null, null, $page);
+        $joggingTimes = JoggingTime::where('user_id', $request->user()->id)->paginate($request->getLimit());
 
         return JsonResponder::respond($joggingTimes, $joggingTimeTransformer);
     }
