@@ -16,6 +16,11 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/jogging-times/{joggingTime}', 'JoggingTimeController@update');
     Route::post('/jogging-times', 'JoggingTimeController@store');
     Route::delete('/jogging-times/{joggingTime}', 'JoggingTimeController@destroy');
+
+    Route::get('/users', 'UserController@index');
+    Route::get('/users/{user}', 'UserController@show');
+    Route::put('/users/{user}', 'UserController@update');
+    Route::delete('/users/{user}', 'UserController@destroy');
 });
 
 Route::post('/users', 'UserController@store');

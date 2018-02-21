@@ -19,6 +19,11 @@ class UserPolicy
         return null;
     }
 
+    public function list(User $user): bool
+    {
+        return in_array($user->role, [Role::MANAGER, Role::ADMIN], true);
+    }
+
     /**
      * Determine whether the user can view the model.
      *
