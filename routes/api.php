@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\LoginController;
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +13,7 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/jogging-times', 'JoggingTimeController@index');
+    Route::put('/jogging-times/{joggingTime}', 'JoggingTimeController@update');
     Route::post('/jogging-times', 'JoggingTimeController@store');
     Route::delete('/jogging-times/{joggingTime}', 'JoggingTimeController@destroy');
 });

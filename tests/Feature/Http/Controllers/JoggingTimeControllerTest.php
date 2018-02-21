@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers;
 
 use App\JoggingTime;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -91,5 +90,32 @@ final class JoggingTimeControllerTest extends TestCase
         $response->assertStatus(204);
 
         $this->assertCount(0, JoggingTime::all());
+    }
+
+    public function testUpdate()
+    {
+        Passport::actingAs($this->admin);
+
+        $joggingTime = factory(JoggingTime::class)->create(['user_id' => $this->admin->id]);
+        $joggingTimeId = $joggingTime->id;
+
+        $this->assertCount(1, JoggingTime::all());
+
+        $response = $this->put('/api/jogging-times/' . $joggingTime->id,
+            [
+                'distance' => 1,
+                'seconds' => 1,
+            ]);
+        $responseData = $this->assertSuccesfulResponseData($response);
+
+        $this->assertSame(1, $responseData['distance']);
+        $this->assertSame(1, $responseData['seconds']);
+
+        $joggingTimes = JoggingTime::all();
+        $this->assertCount(1, $joggingTimes);
+        $joggingTime = $joggingTimes[0];
+        $this->assertSame($joggingTimeId, $joggingTime->id);
+        $this->assertSame(1, $joggingTime->distance);
+        $this->assertSame(1, $joggingTime->seconds);
     }
 }

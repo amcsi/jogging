@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Common\JsonResponder;
 use App\JoggingTime;
+use App\JoggingTime\JoggingTimeTransformer;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,7 +17,7 @@ class JoggingTimeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(JoggingTime\JoggingTimeTransformer $joggingTimeTransformer, Request $request, Guard $guard)
+    public function index(JoggingTimeTransformer $joggingTimeTransformer, Request $request, Guard $guard)
     {
         $limit = max(1, min(100, $request['limit'] ?: self::DEFAULT_LIMIT));
         $page = $request['page'] ?: 1;
@@ -25,7 +27,7 @@ class JoggingTimeController extends Controller
         return JsonResponder::respond($joggingTimes, $joggingTimeTransformer);
     }
 
-    public function store(Request $request, JoggingTime\JoggingTimeTransformer $joggingTimeTransformer, Guard $guard)
+    public function store(Request $request, JoggingTimeTransformer $joggingTimeTransformer, Guard $guard)
     {
         $data = $request->validate([
             'distance' => 'required|integer|min:1',
@@ -42,14 +44,22 @@ class JoggingTimeController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\JoggingTime  $joggingTime
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JoggingTime $joggingTime)
-    {
-        //
+    public function update(
+        Request $request,
+        JoggingTime $joggingTime,
+        JoggingTimeTransformer $joggingTimeTransformer,
+        Guard $guard
+    ) {
+        if ((int)$joggingTime->user_id !== $guard->user()->id) {
+            // You can only access your own resources.
+            throw new AuthenticationException();
+        }
+
+        $joggingTime->fill($request->toArray());
+        $joggingTime->save();
+
+        return JsonResponder::respond($joggingTime, $joggingTimeTransformer);
     }
 
     /**
@@ -57,9 +67,12 @@ class JoggingTimeController extends Controller
      */
     public function destroy(JoggingTime $joggingTime, Guard $guard)
     {
-        if ((int) $joggingTime->user_id === $guard->user()->id) {
-            $joggingTime->delete();
+        if ((int)$joggingTime->user_id !== $guard->user()->id) {
+            // You can only access your own resources.
+            throw new AuthenticationException();
         }
+
+        $joggingTime->delete();
 
         return new Response('', 204);
     }

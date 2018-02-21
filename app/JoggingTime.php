@@ -9,6 +9,11 @@ class JoggingTime extends Model
 {
     protected $fillable = ['distance', 'seconds', 'day'];
 
+    protected $casts = [
+        'seconds' => 'int',
+        'distance' => 'int',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
