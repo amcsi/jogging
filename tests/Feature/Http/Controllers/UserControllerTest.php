@@ -91,4 +91,27 @@ class UserControllerTest extends TestCase
 
         $this->assertTrue(\Hash::check($newPassword, $this->user->refresh()->password));
     }
+
+    public function testRegularUserCannotDeleteSelf(): void
+    {
+        Passport::actingAs($this->user);
+
+        $this->delete('/api/users/' . $this->user->id)->assertStatus(403);
+    }
+
+    public function testManagerCanDeleteUser(): void
+    {
+        Passport::actingAs($this->manager);
+
+        $this->delete('/api/users/' . $this->user->id);
+
+        $this->assertNull(User::find($this->user->id));
+    }
+
+    public function testAdminCannotDeleteSelf(): void
+    {
+        Passport::actingAs($this->admin);
+
+        $this->delete('/api/users/' . $this->admin->id)->assertStatus(403);
+    }
 }

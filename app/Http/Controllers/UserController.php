@@ -14,6 +14,7 @@ use App\User\UserTransformer;
 use Illuminate\Database\QueryException;
 use Illuminate\Hashing\HashManager;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -73,5 +74,14 @@ class UserController extends Controller
         }
 
         return JsonResponder::respond($user, $userTransformer);
+    }
+
+    public function destroy(User $user)
+    {
+        $this->authorize('delete', $user);
+
+        $user->delete();
+
+        return new Response('', 204);
     }
 }
