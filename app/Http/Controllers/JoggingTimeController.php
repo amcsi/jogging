@@ -22,7 +22,7 @@ class JoggingTimeController extends Controller
         $limit = max(1, min(100, $request['limit'] ?: self::DEFAULT_LIMIT));
         $page = $request['page'] ?: 1;
 
-        $joggingTimes = JoggingTime::where('user_id', $guard->user()->id)->paginate($limit, null, null, $page);
+        $joggingTimes = JoggingTime::where('user_id', $guard->id())->paginate($limit, null, null, $page);
 
         return JsonResponder::respond($joggingTimes, $joggingTimeTransformer);
     }
@@ -36,7 +36,7 @@ class JoggingTimeController extends Controller
         ]);
 
         $joggingTime = new JoggingTime($data);
-        $joggingTime->user_id = $guard->user()->id;
+        $joggingTime->user_id = $guard->id();
         $joggingTime->save();
 
         return JsonResponder::respond($joggingTime, $joggingTimeTransformer);
@@ -51,7 +51,7 @@ class JoggingTimeController extends Controller
         JoggingTimeTransformer $joggingTimeTransformer,
         Guard $guard
     ) {
-        if ((int)$joggingTime->user_id !== $guard->user()->id) {
+        if ((int)$joggingTime->user_id !== $guard->id()) {
             // You can only access your own resources.
             throw new AuthenticationException();
         }
@@ -67,7 +67,7 @@ class JoggingTimeController extends Controller
      */
     public function destroy(JoggingTime $joggingTime, Guard $guard)
     {
-        if ((int)$joggingTime->user_id !== $guard->user()->id) {
+        if ((int)$joggingTime->user_id !== $guard->id()) {
             // You can only access your own resources.
             throw new AuthenticationException();
         }
