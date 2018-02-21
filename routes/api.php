@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('/jogging-times', 'JoggingTimeController@index');
     Route::post('/jogging-times', 'JoggingTimeController@store');
 });
 

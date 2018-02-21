@@ -40,10 +40,25 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertSame($distance, (int) $joggingTime['distance']);
         $this->assertSame($day, $joggingTime['day']);
 
-        $responseData = $this->getSuccesfulResponse($response);
+        $responseData = $this->assertSuccesfulResponseData($response);
 
         $this->assertSame($seconds, $responseData['seconds']);
         $this->assertSame($distance, $responseData['distance']);
         $this->assertSame($day, $responseData['day']);
+    }
+
+    public function testIndex(): void
+    {
+        Passport::actingAs($this->admin);
+
+        factory(JoggingTime::class, 4)->create(['user_id' => $this->admin->id]);
+
+        $response = $this->get('/api/jogging-times?limit=2');
+
+        $this->assertSuccesfulResponseData($response);
+        $paginationData = $this->assertPagination($response);
+        $this->assertSame(10, $paginationData['per_page']);
+        $this->assertSame(1, $paginationData['current_page']);
+        $this->assertSame(4, $paginationData['total']);
     }
 }

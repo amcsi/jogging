@@ -18,11 +18,18 @@ abstract class TestCase extends BaseTestCase
      * @param TestResponse $response
      * @return array
      */
-    protected function getSuccesfulResponse(TestResponse $response)
+    protected function assertSuccesfulResponseData(TestResponse $response)
     {
         $response->assertStatus(200);
         $response->assertJsonStructure(['data']);
         return $response->json('data');
+    }
+
+    protected function assertPagination(TestResponse $response)
+    {
+        $pagination = $response->json('pagination');
+        $this->assertNotEmpty($pagination);
+        return $pagination;
     }
 
     use CreatesApplication;
