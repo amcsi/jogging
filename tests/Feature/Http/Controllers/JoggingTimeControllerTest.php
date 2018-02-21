@@ -51,14 +51,30 @@ final class JoggingTimeControllerTest extends TestCase
     {
         Passport::actingAs($this->admin);
 
-        factory(JoggingTime::class, 4)->create(['user_id' => $this->admin->id]);
+        factory(JoggingTime::class, 5)->create(['user_id' => $this->admin->id]);
 
         $response = $this->get('/api/jogging-times?limit=2');
 
-        $this->assertSuccesfulResponseData($response);
+        $this->assertCount(2, $this->assertSuccesfulResponseData($response));
         $paginationData = $this->assertPagination($response);
-        $this->assertSame(10, $paginationData['per_page']);
+        $this->assertSame(2, $paginationData['per_page']);
         $this->assertSame(1, $paginationData['current_page']);
-        $this->assertSame(4, $paginationData['total']);
+        $this->assertSame(5, $paginationData['total']);
+
+        $response = $this->get('/api/jogging-times?limit=2&page=2');
+
+        $this->assertCount(2, $this->assertSuccesfulResponseData($response));
+        $paginationData = $this->assertPagination($response);
+        $this->assertSame(2, $paginationData['per_page']);
+        $this->assertSame(2, $paginationData['current_page']);
+        $this->assertSame(5, $paginationData['total']);
+
+        $response = $this->get('/api/jogging-times?limit=2&page=3');
+
+        $this->assertCount(1, $this->assertSuccesfulResponseData($response));
+        $paginationData = $this->assertPagination($response);
+        $this->assertSame(2, $paginationData['per_page']);
+        $this->assertSame(3, $paginationData['current_page']);
+        $this->assertSame(5, $paginationData['total']);
     }
 }

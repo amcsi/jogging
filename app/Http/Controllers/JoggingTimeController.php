@@ -8,14 +8,18 @@ use Illuminate\Http\Request;
 
 class JoggingTimeController extends Controller
 {
+    private const DEFAULT_LIMIT = 10;
+
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index(JoggingTime\JoggingTimeTransformer $joggingTimeTransformer)
+    public function index(JoggingTime\JoggingTimeTransformer $joggingTimeTransformer, Request $request)
     {
-        $joggingTimes = JoggingTime::where('user_id', \Auth::user()->id)->paginate(10);
+        $limit = max(1, min(100, $request['limit'] ?: self::DEFAULT_LIMIT));
+        $page = $request['page'] ?: 1;
+
+        $joggingTimes = JoggingTime::where('user_id', \Auth::user()->id)->paginate($limit, null, null, $page);
+
         return JsonResponder::respond($joggingTimes, $joggingTimeTransformer);
     }
 

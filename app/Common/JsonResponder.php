@@ -29,7 +29,7 @@ class JsonResponder
         if ($data instanceof LengthAwarePaginator) {
             $return['pagination'] = [
                 'current_page' => $data->currentPage(),
-                'per_page' => $data->perPage(),
+                'per_page' => (int) $data->perPage(),
                 'total' => $data->total(),
             ];
         }
