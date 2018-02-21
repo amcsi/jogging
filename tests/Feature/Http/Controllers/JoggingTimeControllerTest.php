@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers;
 
 use App\JoggingTime;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -76,5 +77,19 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertSame(2, $paginationData['per_page']);
         $this->assertSame(3, $paginationData['current_page']);
         $this->assertSame(5, $paginationData['total']);
+    }
+
+    public function testDestroy(): void
+    {
+        Passport::actingAs($this->admin);
+
+        $joggingTime = factory(JoggingTime::class)->create(['user_id' => $this->admin->id]);
+
+        $this->assertCount(1, JoggingTime::all());
+
+        $response = $this->delete('/api/jogging-times/' . $joggingTime->id);
+        $response->assertStatus(204);
+
+        $this->assertCount(0, JoggingTime::all());
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Common\JsonResponder;
 use App\JoggingTime;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class JoggingTimeController extends Controller
 {
@@ -52,12 +53,13 @@ class JoggingTimeController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\JoggingTime  $joggingTime
-     * @return \Illuminate\Http\Response
      */
     public function destroy(JoggingTime $joggingTime)
     {
-        //
+        if ((int) $joggingTime->user_id === \Auth::user()->id) {
+            $joggingTime->delete();
+        }
+
+        return new Response('', 204);
     }
 }
