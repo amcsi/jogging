@@ -13,7 +13,7 @@ class UserControllerTest extends TestCase
     /**
      * Test that we can register a user, the user is created, and we cannot register another user with the same email.
      */
-    public function testBasicTest(): void
+    public function testRegisterAndLogin(): void
     {
         $this->assertEmpty(User::all());
         $email = 'example@gmail.com';
