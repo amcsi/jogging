@@ -66,4 +66,29 @@ class UserControllerTest extends TestCase
         $this->assertNotEmpty($userData['role']);
         $this->assertPagination($response);
     }
+
+    public function testRegularUserCannotChangeOwnEmail(): void
+    {
+        Passport::actingAs($this->user);
+
+        $oldEmail = $this->user->email;
+        $response = $this->put('api/users/' . $this->user->id, ['email' => 'newemail@example.com']);
+
+        $responseData = $this->assertSuccesfulResponseData($response);
+
+        self::assertSame($oldEmail, $responseData['email']);
+        $this->assertSame($oldEmail, $this->user->refresh()->email);
+    }
+
+    public function testUserCanChangeOwnPassword(): void
+    {
+        Passport::actingAs($this->user);
+
+        $newPassword = 'newPassword';
+        $response = $this->put('api/users/' . $this->user->id, ['password' => $newPassword]);
+
+        $this->assertSuccesfulResponseData($response);
+
+        $this->assertTrue(\Hash::check($newPassword, $this->user->refresh()->password));
+    }
 }

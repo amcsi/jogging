@@ -56,7 +56,7 @@ class UserPolicy
     {
         return $user->id === $targetUser->id ||
             // Managers; they shouldn't be able to update admin accounts though.
-            ($user->role === Role::MANAGER && $targetUser->role !== Role::ADMIN);
+            $this->changeEmail($user, $targetUser);
     }
 
     /**
@@ -70,5 +70,16 @@ class UserPolicy
     {
         // Managers can delete users, but only regular users.
         return $user->role === Role::MANAGER && $targetUser->role === Role::USER;
+    }
+
+    public function changeEmail(User $user, User $targetUser)
+    {
+        return $user->role === Role::MANAGER && $targetUser->role !== Role::ADMIN;
+    }
+
+    public function changeRole(User $user, User $targetUser)
+    {
+        // Only the admin can.
+        return false;
     }
 }
