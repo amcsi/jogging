@@ -6,8 +6,11 @@
  */
 
 require('./bootstrap');
+import BootstrapVue from 'bootstrap-vue';
+import App from './App.vue';
 
 window.Vue = require('vue');
+Vue.use(BootstrapVue);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -18,5 +21,7 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
+  template: '<app />',
+  components: { App },
+  el: '#app',
 });
