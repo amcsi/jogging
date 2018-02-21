@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             if ($user->id == 1) {
                 // The first user should have a fixed email for demoing purposes.
                 $user->email = 'admin@example.com';
+                $user->role = User\Role::ADMIN;
                 $user->save();
             }
             $date = Carbon::now();
