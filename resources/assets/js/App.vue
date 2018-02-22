@@ -19,7 +19,7 @@
     components: { LoginRegistration, vueToast },
     data() {
       return {
-        token: '',
+        token: localStorage.getItem('token') || '',
       };
     },
     mounted() {
@@ -29,6 +29,7 @@
         toast.displaySuccess('Login successful!');
 
         this.token = token;
+        localStorage.setItem('token', token);
         // Make sure all requests include the token from now on.
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       });
