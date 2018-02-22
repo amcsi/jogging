@@ -1,10 +1,9 @@
 <template>
-    <div>
+    <div v-if="! token">
         <h2>Login form</h2>
 
         <b-form-group horizontal
             :label-cols="4"
-            description="Let us know your name."
             label="Email address"
         >
             <b-form-input v-model.trim="email"></b-form-input>
@@ -12,7 +11,6 @@
 
         <b-form-group horizontal
             :label-cols="4"
-            description="Password"
             label="Password"
         >
             <b-form-input type="password" v-model.trim="password"></b-form-input>
@@ -27,6 +25,7 @@
 
   export default {
     name: "login-registration",
+    props: ['token'],
     data() {
       return {
         email: '',
@@ -36,14 +35,20 @@
     },
     methods: {
       login() {
-        console.info('login');
         axios.post('/api/login', {
           username: this.email,
           password: this.password,
         }).then(({ data }) => {
-          toast.displaySuccess('Login success');
-          this.$emit('login.success', { token: data.data.access_token });
-        }).catch(() => {
+          console.info('successHere', data);
+          this.$root.$emit('loginSuccess', { token: data.access_token });
+        }).catch(error => {
+          console.error('error', error);
+          try {
+            if (error.response.data.message) {
+              toast.displayError(`Login failure: ${error.response.data.message}`);
+              return;
+            }
+          } catch (e) {}
           toast.displayError('Login failure');
         });
       },

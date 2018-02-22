@@ -13,6 +13,9 @@ Vue.use(BootstrapVue);
 
 import 'vue-toast/dist/vue-toast.min.css';
 
+import axios from 'axios';
+axios.defaults.headers.common.Accept = 'application/json';
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

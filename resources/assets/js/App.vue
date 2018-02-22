@@ -2,8 +2,8 @@
     <div>
         <vue-toast ref="toast" />
 
-        <b-container @login.success="loginSuccess()">
-            <login-registration />
+        <b-container>
+            <login-registration :token="token" />
         </b-container>
     </div>
 </template>
@@ -12,6 +12,7 @@
   import LoginRegistration from './components/LoginRegistration';
   import vueToast from 'vue-toast';
   import toastRegisterer from './toastRegisterer';
+  import axios from 'axios';
 
   export default {
     name: "app",
@@ -19,19 +20,18 @@
     data() {
       return {
         token: '',
-        messages: {},
       };
-    },
-    methods: {
-      loginSuccess({ token }) {
-        this.messages = { successMessage: "Login successful!" };
-      },
-      failure(message) {
-        this.messages = { errorMessage: message };
-      },
     },
     mounted() {
       toastRegisterer(this.$refs.toast);
+
+      this.$root.$on('loginSuccess', ({ token }) => {
+        toast.displaySuccess('Login successful!');
+
+        this.token = token;
+        // Make sure all requests include the token from now on.
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      });
     },
   };
 </script>
