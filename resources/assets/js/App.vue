@@ -14,10 +14,10 @@
 </template>
 
 <script>
-  import LoginRegistration from './components/LoginRegistration';
-  import vueToast from 'vue-toast';
-  import toastRegisterer from './toastRegisterer';
   import axios from 'axios';
+  import vueToast from 'vue-toast';
+  import LoginRegistration from './components/LoginRegistration';
+  import toastRegisterer from './toastRegisterer';
 
   export default {
     name: "app",
@@ -64,14 +64,17 @@
           this.setUserData(data.data);
           toast.displaySuccess('Login successful!');
         }).catch(error => {
-          try {
-            if (error.response.data.message) {
-              toast.displayError(`Login failure: ${error.response.data.message}`);
-              return;
-            }
-          } catch (e) {}
-          toast.displayError('Login failure');
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to fetch user data');
         });
+      }).$on('handleGenericAjaxError', (error, message = 'An error has occurred') => {
+        try {
+          if (error.response.data.message) {
+            toast.displayError(`${message}: ${error.response.data.message}`);
+            return;
+          }
+        } catch (e) {
+        }
+        toast.displayError(message);
       });
     },
   };

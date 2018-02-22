@@ -40,13 +40,7 @@
         }).then(({ data }) => {
           this.$root.$emit('newTokenReceived', { token: data.access_token });
         }).catch(error => {
-          try {
-            if (error.response.data.message) {
-              toast.displayError(`Login failure: ${error.response.data.message}`);
-              return;
-            }
-          } catch (e) {}
-          toast.displayError('Login failure');
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to log in');
         });
       },
     },
