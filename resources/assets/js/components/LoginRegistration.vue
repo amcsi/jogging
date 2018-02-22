@@ -1,5 +1,5 @@
 <template>
-    <div v-if="! token">
+    <form @submit.prevent="login">
         <h2>Login form</h2>
 
         <b-form-group horizontal
@@ -16,8 +16,8 @@
             <b-form-input type="password" v-model.trim="password"></b-form-input>
         </b-form-group>
 
-        <b-btn variant="primary" @click="login">Login / Register</b-btn>
-    </div>
+        <b-btn variant="primary" type="submit">Login / Register</b-btn>
+    </form>
 </template>
 
 <script>
@@ -25,7 +25,6 @@
 
   export default {
     name: "login-registration",
-    props: ['token'],
     data() {
       return {
         email: '',
@@ -39,10 +38,8 @@
           username: this.email,
           password: this.password,
         }).then(({ data }) => {
-          console.info('successHere', data);
-          this.$root.$emit('loginSuccess', { token: data.access_token });
+          this.$root.$emit('newTokenReceived', { token: data.access_token });
         }).catch(error => {
-          console.error('error', error);
           try {
             if (error.response.data.message) {
               toast.displayError(`Login failure: ${error.response.data.message}`);
