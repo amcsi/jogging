@@ -7,9 +7,11 @@
 require('./bootstrap');
 import BootstrapVue from 'bootstrap-vue';
 import App from './App.vue';
+import spinner from 'vue-spinner/src/PulseLoader.vue';
 
 window.Vue = require('vue');
 Vue.use(BootstrapVue);
+Vue.component('spinner', spinner);
 
 import 'vue-toast/dist/vue-toast.min.css';
 

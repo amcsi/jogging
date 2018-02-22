@@ -21,6 +21,9 @@
     },
     "dependencies": {
         "bootstrap-vue": "^2.0.0-rc.1",
+        "install": "^0.10.4",
+        "npm": "^5.6.0",
+        "vue-spinner": "^1.0.3",
         "vue-toast": "^3.1.0"
     }
 }

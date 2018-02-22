@@ -6,8 +6,12 @@
             <login-registration v-if="!userData" />
 
             <div v-if="userData">
-                Welcome, <strong>{{ userData.email }}!</strong>
-                <button v-if="userData" class="btn btn-warning" @click="logout" :userData="userData">Log out</button>
+                <div>
+                    Welcome, <strong>{{ userData.email }}!</strong>
+                    <button v-if="userData" class="btn btn-warning" @click="logout" :userData="userData">Log out</button>
+                </div>
+
+                <jogging-list :currentUser="userData" />
             </div>
         </b-container>
     </div>
@@ -17,11 +21,12 @@
   import axios from 'axios';
   import vueToast from 'vue-toast';
   import LoginRegistration from './components/LoginRegistration';
+  import JoggingList from './components/jogging/JoggingList';
   import toastRegisterer from './toastRegisterer';
 
   export default {
     name: "app",
-    components: { LoginRegistration, vueToast },
+    components: { LoginRegistration, vueToast, JoggingList },
     data() {
       return {
         token: localStorage.getItem('token') || '',
@@ -52,6 +57,9 @@
         this.userData = userData;
         localStorage.setItem('userData', userData ? JSON.stringify(userData) : null);
       };
+
+      // On creation: set the token to make sure the header is added to the axios defaults.
+      this.setToken(localStorage.getItem('token') || '');
     },
     mounted() {
       toastRegisterer(this.$refs.toast);
