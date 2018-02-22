@@ -1,20 +1,21 @@
 <template>
-    <b-container @login.success="loginSuccess()">
-        <global-messages
-            :successMessage="messages.successMessage"
-            :errorMessage="messages.errorMessage"
-        />
-        <login-registration />
-    </b-container>
+    <div>
+        <vue-toast ref="toast" />
+
+        <b-container @login.success="loginSuccess()">
+            <login-registration />
+        </b-container>
+    </div>
 </template>
 
 <script>
   import LoginRegistration from './components/LoginRegistration';
-  import GlobalMessages from './components/GlobalMessages';
+  import vueToast from 'vue-toast';
+  import toastRegisterer from './toastRegisterer';
 
   export default {
     name: "app",
-    components: { LoginRegistration, GlobalMessages },
+    components: { LoginRegistration, vueToast },
     data() {
       return {
         token: '',
@@ -28,6 +29,9 @@
       failure(message) {
         this.messages = { errorMessage: message };
       },
+    },
+    mounted() {
+      toastRegisterer(this.$refs.toast);
     },
   };
 </script>

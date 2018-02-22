@@ -41,9 +41,10 @@
           username: this.email,
           password: this.password,
         }).then(({ data }) => {
+          toast.displaySuccess('Login success');
           this.$emit('login.success', { token: data.data.access_token });
         }).catch(() => {
-          this.$emit('error', 'Login failure');
+          toast.displayError('Login failure');
         });
       },
     },
