@@ -42,6 +42,15 @@ class UserControllerTest extends TestCase
         $response->assertStatus(409);
     }
 
+    public function testUserCanRequestTheirOwnData(): void
+    {
+        Passport::actingAs($this->user);
+
+        $responseData = $this->assertSuccesfulResponseData($this->get('/api/users/me'));
+
+        $this->assertSame($this->user->id, $responseData['id']);
+    }
+
     public function testRegularUserCannotListUsers(): void
     {
         $user = factory(User::class)->create(['role' => Role::USER]);

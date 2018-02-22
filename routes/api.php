@@ -18,6 +18,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/jogging-times/{joggingTime}', 'JoggingTimeController@destroy');
 
     Route::get('/users', 'UserController@index');
+    Route::get('/users/me', 'UserController@me');
     Route::get('/users/{user}', 'UserController@show');
     Route::put('/users/{user}', 'UserController@update');
     Route::delete('/users/{user}', 'UserController@destroy');

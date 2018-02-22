@@ -25,6 +25,11 @@ class UserController extends Controller
         return JsonResponder::respond(User::latest()->paginate($request->getLimit()), $userListTransformer);
     }
 
+    public function me(UserTransformer $userTransformer, Request $request)
+    {
+        return JsonResponder::respond($request->user(), $userTransformer);
+    }
+
     public function store(Request $request): array
     {
         $data = $request->validate([
