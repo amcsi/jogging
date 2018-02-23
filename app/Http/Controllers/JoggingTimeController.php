@@ -26,8 +26,8 @@ class JoggingTimeController extends Controller
         $this->authorize('create', JoggingTime::class);
 
         $data = $request->validate([
-            'distance' => 'required|integer|min:1',
-            'seconds' => 'required|integer|min:1',
+            'distance_m' => 'required|integer|min:1',
+            'minutes' => 'required|integer|min:1',
             'day' => 'required|date|date_format:Y-m-d|before:tomorrow',
         ]);
 

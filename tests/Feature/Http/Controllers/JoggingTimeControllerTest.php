@@ -23,12 +23,12 @@ final class JoggingTimeControllerTest extends TestCase
     {
         Passport::actingAs($this->admin);
 
-        $seconds = 300;
-        $distance = 1000;
+        $minutes = 5;
+        $distanceM = 1000;
         $day = '2018-02-19';
         $response = $this->post('/api/jogging-times', [
-            'seconds' => $seconds,
-            'distance' => $distance,
+            'minutes' => $minutes,
+            'distance_m' => $distanceM,
             'day' => $day,
         ]);
 
@@ -36,14 +36,14 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertCount(1, $joggingTimes);
         [$joggingTime] = $joggingTimes;
 
-        $this->assertSame($seconds, (int) $joggingTime['seconds']);
-        $this->assertSame($distance, (int) $joggingTime['distance']);
+        $this->assertSame($minutes, (int) $joggingTime['minutes']);
+        $this->assertSame($distanceM, (int) $joggingTime['distance_m']);
         $this->assertSame($day, $joggingTime['day']);
 
         $responseData = $this->assertSuccesfulResponseData($response);
 
-        $this->assertSame($seconds, $responseData['seconds']);
-        $this->assertSame($distance, $responseData['distance']);
+        $this->assertSame($minutes, $responseData['minutes']);
+        $this->assertSame($distanceM, $responseData['distance_m']);
         $this->assertSame($day, $responseData['day']);
     }
 
@@ -103,19 +103,19 @@ final class JoggingTimeControllerTest extends TestCase
 
         $response = $this->put('/api/jogging-times/' . $joggingTime->id,
             [
-                'distance' => 1,
-                'seconds' => 1,
+                'distance_m' => 1,
+                'minutes' => 1,
             ]);
         $responseData = $this->assertSuccesfulResponseData($response);
 
-        $this->assertSame(1, $responseData['distance']);
-        $this->assertSame(1, $responseData['seconds']);
+        $this->assertSame(1, $responseData['distance_m']);
+        $this->assertSame(1, $responseData['minutes']);
 
         $joggingTimes = JoggingTime::all();
         $this->assertCount(1, $joggingTimes);
         $joggingTime = $joggingTimes[0];
         $this->assertSame($joggingTimeId, $joggingTime->id);
-        $this->assertSame(1, $joggingTime->distance);
-        $this->assertSame(1, $joggingTime->seconds);
+        $this->assertSame(1, $joggingTime->distance_m);
+        $this->assertSame(1, $joggingTime->minutes);
     }
 }

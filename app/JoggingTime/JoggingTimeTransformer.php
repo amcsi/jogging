@@ -10,8 +10,8 @@ class JoggingTimeTransformer
     public function __invoke(JoggingTime $joggingTime): array
     {
         return [
-            'distance' => (int) $joggingTime->distance,
-            'seconds' => (int) $joggingTime->seconds,
+            'distance_m' => (int) $joggingTime->distance_m,
+            'minutes' => (int) $joggingTime->minutes,
             'day' => $joggingTime->day,
         ];
     }

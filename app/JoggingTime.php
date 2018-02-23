@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JoggingTime extends Model
 {
-    protected $fillable = ['distance', 'seconds', 'day'];
+    protected $fillable = ['distance_m', 'minutes', 'day'];
 
     protected $casts = [
-        'seconds' => 'int',
-        'distance' => 'int',
+        'minutes' => 'int',
+        'distance_m' => 'int',
     ];
 
     public function user(): BelongsTo

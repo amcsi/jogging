@@ -17,8 +17,8 @@ class CreateJoggingTimesTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->date('day');
-            $table->integer('distance');
-            $table->integer('seconds');
+            $table->integer('distance_m');
+            $table->integer('minutes');
             $table->timestamps();
         });
     }

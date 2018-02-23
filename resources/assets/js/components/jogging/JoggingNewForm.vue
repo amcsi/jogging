@@ -13,9 +13,9 @@
 
                 <b-form-group horizontal
                     :label-cols="4"
-                    label="Distance (km)"
+                    label="Distance (meters)"
                 >
-                    <b-form-input v-model.trim="distance_km"></b-form-input>
+                    <b-form-input v-model.trim="distance_m" placeholder="500"></b-form-input>
                 </b-form-group>
 
 

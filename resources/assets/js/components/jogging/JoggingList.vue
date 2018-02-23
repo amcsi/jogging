@@ -7,20 +7,20 @@
 
             <table class="table b-table">
                 <thead>
-                <th aria-colindex="1">Date</th>
-                <th aria-colindex="2">Distance</th>
-                <th aria-colindex="3">Time (minutes)</th>
-                <th aria-colindex="4">Average speed</th>
-                <th aria-colindex="5">&nbsp</th>
+                <tr>
+                    <th aria-colindex="1">Date</th>
+                    <th aria-colindex="2">Distance</th>
+                    <th aria-colindex="3">Time (minutes)</th>
+                    <th aria-colindex="4">Average speed</th>
+                    <th aria-colindex="5">&nbsp</th>
+                </tr>
                 </thead>
                 <tbody>
                 <tr v-for="joggingTime in joggingTimes">
                     <td>{{ joggingTime.day }}</td>
-                    <td>{{ formatFraction(joggingTime.distance / 1000) }}
-                        km
-                    </td>
-                    <td>{{ formatFraction(joggingTime.seconds / 60) }} minutes</td>
-                    <td>{{ formatFraction((joggingTime.distance / 1000) / (joggingTime.seconds / 3600)) }} km/h</td>
+                    <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
+                    <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
+                    <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }} km/h</td>
                     <td>&nbsp;</td>
                 </tr>
                 </tbody>
@@ -45,7 +45,7 @@
     },
     async mounted() {
       try {
-        const { data } = await axios.get('/api/jogging-times')
+        const { data } = await axios.get('/api/jogging-times');
         this.joggingTimes = data.data;
         this.loading = false;
       } catch (error) {
