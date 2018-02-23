@@ -43,15 +43,22 @@
         formatFraction: new Intl.NumberFormat([], { style: 'decimal', maximumFractionDigits: 2 }).format,
       };
     },
-    async mounted() {
-      try {
-        const { data } = await axios.get('/api/jogging-times');
-        this.joggingTimes = data.data;
-        this.loading = false;
-      } catch (error) {
-        this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
-        this.loading = false;
-      }
+    methods: {
+      async reloadList() {
+        try {
+          const { data } = await axios.get('/api/jogging-times');
+          this.joggingTimes = data.data;
+          this.loading = false;
+        } catch (error) {
+          this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
+          this.loading = false;
+        }
+      },
+    },
+    mounted() {
+      this.reloadList();
+      // Reload the list when a new entry is added.
+      this.$root.$on('newJoggingTimeAdded', this.reloadList.bind(this));
     },
   };
 </script>

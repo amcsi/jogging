@@ -75,6 +75,7 @@
           });
           toast.displaySuccess('Successfully added new jogging entry');
           this.$modal.hide('newJoggingTime');
+          this.$root.$emit('newJoggingTimeAdded');
         } catch (error) {
           this.$root.$emit('handleGenericAjaxError', error, 'Failed to add new jogging entry');
           try {
