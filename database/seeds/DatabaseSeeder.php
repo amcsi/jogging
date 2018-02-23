@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
                 $user->role = User\Role::ADMIN;
                 $user->save();
             }
-            $date = Carbon::now();
+            $date = new Carbon('-1 day');
             // Prepare the jogging times for each user.
             // Each date entry for each jogging time of a user will be from "today" counting backwards one day each.
             for ($i = 0; $i < 30; $i++) {

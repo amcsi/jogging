@@ -15,7 +15,8 @@ $factory->define(App\JoggingTime::class,
         if (isset($oldestDates[$userId])) {
             $date = (clone $oldestDates[$userId])->subDays(1);
         } else {
-            $date = new Carbon();
+            // Start from yesterday. This is good
+            $date = new Carbon('-1 day');
         }
         $oldestDates[$userId] = $date;
 
