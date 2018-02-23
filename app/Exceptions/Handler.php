@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Common\ApiException;
+use App\Common\ApiFieldErrorsException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -51,12 +52,15 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof ApiException) {
-            return $this->jsonResponse([
-                'error' => [
-                    'code' => $exception->getApiErrorCode(),
-                    'message' => $exception->getMessage(),
-                ],
-            ], $exception->getHttpStatusCode());
+            $responseData = [
+                'message' => $exception->getMessage(),
+                'errorCode' => $exception->getApiErrorCode(),
+            ];
+            if ($exception instanceof ApiFieldErrorsException) {
+                // Try to match the format Laravel uses for showing field errors.
+                $responseData['errors'] = $exception->getErrors();
+            }
+            return $this->jsonResponse($responseData, $exception->getHttpStatusCode());
         }
         return parent::render($request, $exception);
     }

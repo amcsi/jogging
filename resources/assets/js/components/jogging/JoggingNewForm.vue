@@ -77,8 +77,9 @@
           this.$modal.hide('newJoggingTime');
         } catch (error) {
           this.$root.$emit('handleGenericAjaxError', error, 'Failed to add new jogging entry');
-          if (error.response.status === 422) {
+          try {
             this.errors = error.response.data.errors;
+          } catch (e) {
           }
         }
         this.loading = false;

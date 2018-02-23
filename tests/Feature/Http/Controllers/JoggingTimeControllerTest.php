@@ -26,11 +26,12 @@ final class JoggingTimeControllerTest extends TestCase
         $minutes = 5;
         $distanceM = 1000;
         $day = '2018-02-19';
-        $response = $this->post('/api/jogging-times', [
+        $postData = [
             'minutes' => $minutes,
             'distance_m' => $distanceM,
             'day' => $day,
-        ]);
+        ];
+        $response = $this->post('/api/jogging-times', $postData);
 
         $joggingTimes = JoggingTime::all();
         $this->assertCount(1, $joggingTimes);
@@ -45,6 +46,15 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertSame($minutes, $responseData['minutes']);
         $this->assertSame($distanceM, $responseData['distance_m']);
         $this->assertSame($day, $responseData['day']);
+
+        // Cannot post this jogging time again due to duplicate day for the user.
+        $response = $this->post('/api/jogging-times', $postData);
+        $response->assertStatus(409);
+        $response->assertJson([
+            'errors' => [
+                'day' => ['There already is an entry for that day'],
+            ],
+        ]);
     }
 
     public function testIndex(): void

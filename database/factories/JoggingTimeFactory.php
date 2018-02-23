@@ -1,11 +1,27 @@
 <?php
 
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
-$factory->define(App\JoggingTime::class, function (Faker $faker) {
+/**
+ * Need to keep track of dates used for creating new fake jogging times to ensure no duplicate of day entries per user.
+ * @var Carbon[] $oldestDates
+ **/
+$oldestDates = [];
+
+$factory->define(App\JoggingTime::class,
+    function (Faker $faker, array $attributes) use (&$oldestDates) {
+        $userId = $attributes['user_id'];
+        if (isset($oldestDates[$userId])) {
+            $date = (clone $oldestDates[$userId])->subDays(1);
+        } else {
+            $date = new Carbon();
+        }
+        $oldestDates[$userId] = $date;
+
     return [
         'distance_m' => random_int(1, 50) * 100,
         'minutes' => random_int(5, 120),
-        'day' => $faker->unique()->dateTimeBetween('-1 month')->format('Y-m-d'),
+        'day' => $date->format('Y-m-d'),
     ];
 });

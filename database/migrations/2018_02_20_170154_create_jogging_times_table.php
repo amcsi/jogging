@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateJoggingTimesTable extends Migration
 {
@@ -19,6 +19,7 @@ class CreateJoggingTimesTable extends Migration
             $table->date('day');
             $table->integer('distance_m');
             $table->integer('minutes');
+            $table->unique(['user_id', 'day']);
             $table->timestamps();
         });
     }
