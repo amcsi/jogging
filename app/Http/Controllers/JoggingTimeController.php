@@ -19,7 +19,9 @@ class JoggingTimeController extends Controller
      */
     public function index(JoggingTimeTransformer $joggingTimeTransformer, PagingRequest $request)
     {
-        $joggingTimes = JoggingTime::where('user_id', $request->user()->id)->paginate($request->getLimit());
+        $joggingTimes = JoggingTime::where('user_id', $request->user()->id)
+            ->orderBy('day', 'desc')
+            ->paginate($request->getLimit());
 
         return JsonResponder::respond($joggingTimes, $joggingTimeTransformer);
     }

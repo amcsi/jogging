@@ -65,11 +65,14 @@ final class JoggingTimeControllerTest extends TestCase
 
         $response = $this->get('/api/jogging-times?limit=2');
 
-        $this->assertCount(2, $this->assertSuccesfulResponseData($response));
+        $responseData = $this->assertSuccesfulResponseData($response);
+        $this->assertCount(2, $responseData);
         $paginationData = $this->assertPagination($response);
         $this->assertSame(2, $paginationData['per_page']);
         $this->assertSame(1, $paginationData['current_page']);
         $this->assertSame(5, $paginationData['total']);
+        $message = 'Entries should be in day descending order';
+        $this->assertGreaterThan($responseData[1]['day'], $responseData[0]['day'], $message);
 
         $response = $this->get('/api/jogging-times?limit=2&page=2');
 
