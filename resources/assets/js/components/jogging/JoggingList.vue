@@ -37,16 +37,15 @@
         formatFraction: new Intl.NumberFormat([], {style: 'decimal', maximumFractionDigits: 2}).format,
       };
     },
-    mounted() {
-      axios.get('/api/jogging-times')
-        .then(({ data }) => {
-          this.joggingTimes = data.data;
-          this.loading = false;
-        })
-        .catch(error => {
-          this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
-          this.loading = false;
-        });
+    async mounted() {
+      try {
+        const { data } = await axios.get('/api/jogging-times')
+        this.joggingTimes = data.data;
+        this.loading = false;
+      } catch (error) {
+        this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
+        this.loading = false;
+      }
     },
   };
 </script>
