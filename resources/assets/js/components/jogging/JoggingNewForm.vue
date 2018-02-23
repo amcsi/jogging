@@ -1,21 +1,25 @@
 <template>
     <div>
-        <modal name="newJoggingTime">
-            <form @submit.prevent="save" class="newJoggingTime">
+        <modal name="newJoggingTime" height="auto" scrollable>
+            <form @submit.prevent="save" class="newJoggingTime" @keyup="clearError">
                 <h2>Add new jogging entry</h2>
 
                 <b-form-group horizontal
                     :label-cols="4"
                     label="Date"
                 >
-                    <b-form-input v-model.trim="day"></b-form-input>
+                    <b-form-input name="day" v-model.trim="day"></b-form-input>
+
+                    <form-field-errors :errors="errors.day" />
                 </b-form-group>
 
                 <b-form-group horizontal
                     :label-cols="4"
                     label="Distance (meters)"
                 >
-                    <b-form-input v-model.trim="distance_m" placeholder="500"></b-form-input>
+                    <b-form-input name="distance_m" v-model.trim="distance_m" placeholder="500"></b-form-input>
+
+                    <form-field-errors :errors="errors.distance_m" />
                 </b-form-group>
 
 
@@ -23,7 +27,9 @@
                     :label-cols="4"
                     label="Minutes spent running"
                 >
-                    <b-form-input v-model.trim="minutes"></b-form-input>
+                    <b-form-input name="minutes" v-model.trim="minutes"></b-form-input>
+
+                    <form-field-errors :errors="errors.minutes" />
                 </b-form-group>
 
                 <div v-if="! loading">
@@ -44,16 +50,44 @@
   /** @class JoggingNewForm */
   export default {
     name: 'jogging-new-form',
-    props: 'currentUser',
+    props: ['currentUser'],
     data() {
+      const now = new Date();
+      const todayUTC = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+
       return {
         loading: false,
+        errors: {},
+        day: todayUTC.toISOString().slice(0, 10),
+        minutes: '',
+        distance_m: '',
       };
     },
     methods: {
-      save() {
+      async save() {
         this.loading = true;
-      }
+        this.errors = {};
+        try {
+          await axios.post('/api/jogging-times', {
+            day: this.day,
+            minutes: this.minutes,
+            distance_m: this.distance_m,
+          });
+          toast.displaySuccess('Successfully added new jogging entry');
+          this.$modal.hide('newJoggingTime');
+        } catch (error) {
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to add new jogging entry');
+          if (error.response.status === 422) {
+            this.errors = error.response.data.errors;
+          }
+        }
+        this.loading = false;
+      },
+      clearError($event) {
+        if ($event.target.name) {
+          Vue.delete(this.errors, $event.target.name);
+        }
+      },
     },
   };
 </script>

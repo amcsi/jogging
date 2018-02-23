@@ -5,19 +5,20 @@
  */
 
 require('./bootstrap');
+import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
-import App from './App.vue';
-import spinner from 'vue-spinner/src/PulseLoader.vue';
 import VModal from 'vue-js-modal';
+import spinner from 'vue-spinner/src/PulseLoader.vue';
+import 'vue-toast/dist/vue-toast.min.css';
+import App from './App.vue';
+import FormFieldErrors from './globalComponents/FormFieldErrors';
 
 window.Vue = require('vue');
 Vue.use(BootstrapVue);
 Vue.component('spinner', spinner);
+Vue.component('form-field-errors', FormFieldErrors);
 Vue.use(VModal);
 
-import 'vue-toast/dist/vue-toast.min.css';
-
-import axios from 'axios';
 axios.defaults.headers.common.Accept = 'application/json';
 
 /**
