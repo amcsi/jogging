@@ -55,8 +55,8 @@
     methods: {
       async reloadList() {
         try {
+          this.loading = true;
           const { data } = await axios.get('/api/jogging-times');
-          this.loading = false;
           this.joggingTimes = data.data.map(joggingTime => {
             // For reactivity.
             joggingTime.deleted = false;
@@ -64,8 +64,8 @@
           });
         } catch (error) {
           this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
-          this.loading = false;
         }
+        this.loading = false;
       },
       async deleteJoggingTime(joggingTime) {
         if (!confirm('Are you sure you want to delete this entry?')) {
