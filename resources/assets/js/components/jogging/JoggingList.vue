@@ -3,7 +3,13 @@
         <spinner :loading="loading" />
 
         <div v-if="!loading">
-            <jogging-new-form :currentUser="currentUser" />
+
+            <div>
+                <jogging-time-entry :currentUser="currentUser" />
+
+                <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
+            </div>
+
 
             <table class="table b-table">
                 <thead>
@@ -21,7 +27,10 @@
                     <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
                     <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
                     <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }} km/h</td>
-                    <td><i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i></td>
+                    <td>
+                        <i class="fa fa-pencil clickable" @click="$modal.show('joggingTimeEntry', {joggingTime})"></i>
+                        <i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -30,12 +39,12 @@
 </template>
 
 <script>
-  import JoggingNewForm from './JoggingNewForm';
+  import JoggingTimeEntry from './JoggingTimeEntry';
 
   export default {
     name: "jogging-list",
     props: ['currentUser'],
-    components: { JoggingNewForm },
+    components: { JoggingTimeEntry: JoggingTimeEntry },
     data() {
       return {
         loading: true,
@@ -77,7 +86,7 @@
     mounted() {
       this.reloadList();
       // Reload the list when a new entry is added.
-      this.$root.$on('newJoggingTimeAdded', this.reloadList.bind(this));
+      this.$root.$on('joggingTimeChanged', this.reloadList.bind(this));
     },
   };
 </script>
