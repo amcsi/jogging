@@ -16,12 +16,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="joggingTime in joggingTimes">
+                <tr v-for="joggingTime in joggingTimes" v-if="! joggingTime.deleted">
                     <td>{{ joggingTime.day }}</td>
                     <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
                     <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
                     <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }} km/h</td>
-                    <td>&nbsp;</td>
+                    <td><i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i></td>
                 </tr>
                 </tbody>
             </table>
@@ -47,13 +47,32 @@
       async reloadList() {
         try {
           const { data } = await axios.get('/api/jogging-times');
-          this.joggingTimes = data.data;
           this.loading = false;
+          this.joggingTimes = data.data.map(joggingTime => {
+            // For reactivity.
+            joggingTime.deleted = false;
+            return joggingTime;
+          });
         } catch (error) {
           this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
           this.loading = false;
         }
       },
+      async deleteJoggingTime(joggingTime) {
+        if (!confirm('Are you sure you want to delete this entry?')) {
+          return;
+        }
+
+        try {
+            await axios.delete('/api/jogging-times/' + joggingTime.id);
+            joggingTime.deleted = true;
+            console.info('jogging time deleted');
+        } catch (error) {
+          try {
+            this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete jogging entry');
+          } catch (e) {};
+        }
+      }
     },
     mounted() {
       this.reloadList();
@@ -64,5 +83,7 @@
 </script>
 
 <style scoped>
-
+    .clickable {
+        cursor: pointer;
+    }
 </style>
