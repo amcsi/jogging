@@ -49,6 +49,7 @@ class UserControllerTest extends TestCase
         $responseData = $this->assertSuccesfulResponseData($this->get('/api/users/me'));
 
         $this->assertSame($this->user->id, $responseData['id']);
+        $this->assertSame($this->user->role, $responseData['role']);
     }
 
     public function testRegularUserCannotListUsers(): void
