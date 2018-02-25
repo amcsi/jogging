@@ -68,13 +68,30 @@
         this.loading = true;
         try {
           const responseData = (await axios.get('/api/users', { params: { page } })).data;
-          this.userList = responseData.data;
+          this.userList = responseData.data.map(item => {
+            // For reactivity.
+            item.deleted = false;
+            return item;
+          });
           this.paginationData = responseData.pagination;
           this.page = page;
         } catch (error) {
           this.$root.$emit('handleGenericAjaxError', error, 'Failed to load user list');
         }
         this.loading = false;
+      },
+      async deleteUser(user) {
+        if (!confirm(`Are you sure you want to delete user with an email of ${user.email}?`)) {
+          return;
+        }
+
+        try {
+          await axios.delete('/api/users/' + user.id);
+          user.deleted = true;
+          toast.displaySuccess('Successfully deleted the user.');
+        } catch (error) {
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete user');
+        }
       }
     },
     mounted() {
@@ -84,5 +101,7 @@
 </script>
 
 <style scoped>
-
+    .clickable {
+        cursor: pointer;
+    }
 </style>
