@@ -2,7 +2,14 @@
     <div>
         <h1>User list</h1>
 
-        <pagination :paginationData="paginationData" :change="reloadList" v-if="paginationData" />
+        <b-pagination
+            size="md"
+            :total-rows="paginationData.total"
+            :per-page="paginationData.per_page"
+            @change="reloadList"
+            v-model="page"
+            v-if="paginationData"
+        ></b-pagination>
 
         <spinner :loading="loading" />
 
@@ -30,7 +37,14 @@
                 </tbody>
             </table>
 
-            <pagination :paginationData="paginationData" :change="reloadList" />
+            <b-pagination
+                size="md"
+                :total-rows="paginationData.total"
+                :per-page="paginationData.per_page"
+                @change="reloadList"
+                v-model="page"
+                v-if="paginationData"
+            ></b-pagination>
         </div>
     </div>
 </template>
@@ -45,16 +59,18 @@
         userList: [],
         loading: true,
         paginationData: null,
+        page: 1,
       };
     },
     methods: {
       async reloadList(page = 1) {
-        console.info(page);
+        this.page = page;
         this.loading = true;
         try {
           const responseData = (await axios.get('/api/users', { params: { page } })).data;
           this.userList = responseData.data;
           this.paginationData = responseData.pagination;
+          this.page = page;
         } catch (error) {
           this.$root.$emit('handleGenericAjaxError', error, 'Failed to load user list');
         }
