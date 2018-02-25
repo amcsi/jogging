@@ -2,6 +2,8 @@
     <div>
         <h1>User list</h1>
 
+        <userEdit />
+
         <b-pagination
             size="md"
             :total-rows="paginationData.total"
@@ -30,7 +32,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td>
-                        <i class="fa fa-pencil clickable" @click="$modal.show('editUser', {user})"></i>
+                        <i class="fa fa-pencil clickable" @click="$modal.show('userEdit', { user })"></i>
                         <i class="fa fa-trash clickable" @click="deleteUser(user)"></i>
                     </td>
                 </tr>
@@ -50,9 +52,12 @@
 </template>
 
 <script>
+  import UserEdit from './UserEdit';
+
   /** @class UserList */
   export default {
     name: 'user-list',
+    components: { UserEdit },
     props: ['userData'],
     data() {
       return {
@@ -95,7 +100,9 @@
       }
     },
     mounted() {
-      this.reloadList();
+      this.reloadList(this.page);
+      // Reload the list when a new entry is added.
+      this.$root.$on('userChanged', this.reloadList.bind(this.page));
     },
   };
 </script>
