@@ -2,10 +2,11 @@
     <div>
         <h1>User list</h1>
 
+        <pagination :paginationData="paginationData" :change="reloadList" v-if="paginationData" />
+
         <spinner :loading="loading" />
 
         <div v-if="!loading">
-            <pagination :paginationData="paginationData" :change="reloadList" />
 
             <table class="table b-table">
                 <thead>
@@ -43,7 +44,7 @@
       return {
         userList: [],
         loading: true,
-        paginationData: {},
+        paginationData: null,
       };
     },
     methods: {

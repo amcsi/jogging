@@ -2,17 +2,17 @@
     <div>
         <h1>Jogging list</h1>
 
+        <div>
+            <jogging-time-entry :currentUser="currentUser" />
+
+            <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
+        </div>
+
+        <pagination :paginationData="paginationData" :change="reloadList" v-if="paginationData" />
+
         <spinner :loading="loading" />
 
         <div v-if="!loading">
-
-            <div>
-                <jogging-time-entry :currentUser="currentUser" />
-
-                <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
-            </div>
-
-            <pagination :paginationData="paginationData" :change="reloadList" />
 
             <table class="table b-table">
                 <thead>
@@ -54,7 +54,7 @@
       return {
         loading: true,
         joggingTimes: [],
-        paginationData: {},
+        paginationData: null,
         formatFraction: new Intl.NumberFormat([], { style: 'decimal', maximumFractionDigits: 2 }).format,
       };
     },
