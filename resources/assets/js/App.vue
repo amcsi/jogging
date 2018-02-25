@@ -8,11 +8,6 @@
             <login-registration v-if="!userData" />
 
             <div v-if="userData">
-                <div>
-                    Welcome, <strong>{{ userData.email }}!</strong>
-                    <button v-if="userData" class="btn btn-warning" @click="logout" :userData="userData">Log out</button>
-                </div>
-
                 <router-view :currentUser="userData" />
             </div>
         </b-container>
@@ -34,11 +29,6 @@
         token: localStorage.getItem('token') || '',
         userData: JSON.parse(localStorage.getItem('userData')) || '',
       };
-    },
-    methods: {
-      logout() {
-        this.setToken('');
-      }
     },
     created() {
       this.setToken = token => {
@@ -85,6 +75,8 @@
         } catch (e) {
         }
         toast.displayError(message);
+      }).$on('doLogout', () => {
+        this.setToken('');
       });
     },
   };
