@@ -11,7 +11,7 @@
                     <button v-if="userData" class="btn btn-warning" @click="logout" :userData="userData">Log out</button>
                 </div>
 
-                <jogging-list :currentUser="userData" />
+                <router-view :currentUser="userData" />
             </div>
         </b-container>
     </div>
@@ -21,12 +21,11 @@
   import axios from 'axios';
   import vueToast from 'vue-toast';
   import LoginRegistration from './components/LoginRegistration';
-  import JoggingList from './components/jogging/JoggingList';
   import toastRegisterer from './toastRegisterer';
 
   export default {
     name: "app",
-    components: { LoginRegistration, vueToast, JoggingList },
+    components: { LoginRegistration, vueToast },
     data() {
       return {
         token: localStorage.getItem('token') || '',

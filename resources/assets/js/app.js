@@ -8,9 +8,11 @@ require('./bootstrap');
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 import VModal from 'vue-js-modal';
+import VueRouter from 'vue-router';
 import spinner from 'vue-spinner/src/PulseLoader.vue';
 import 'vue-toast/dist/vue-toast.min.css';
 import App from './App.vue';
+import JoggingList from './components/jogging/JoggingList';
 import FormFieldErrors from './globalComponents/FormFieldErrors';
 
 window.Vue = require('vue');
@@ -18,6 +20,13 @@ Vue.use(BootstrapVue);
 Vue.component('spinner', spinner);
 Vue.component('form-field-errors', FormFieldErrors);
 Vue.use(VModal);
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes: [
+    { path: '/', component: JoggingList },
+  ],
+});
 
 axios.defaults.headers.common.Accept = 'application/json';
 
@@ -28,6 +37,7 @@ axios.defaults.headers.common.Accept = 'application/json';
  */
 
 const app = new Vue({
+  router,
   template: '<app />',
   components: { App },
   el: '#app',
