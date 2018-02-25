@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $this->authorize('list', User::class);
 
-        return JsonResponder::respond(User::latest()->paginate($request->getLimit()), $userListTransformer);
+        return JsonResponder::respond(User::orderBy('email')->paginate($request->getLimit()), $userListTransformer);
     }
 
     public function me(UserTransformer $userTransformer, Request $request)
