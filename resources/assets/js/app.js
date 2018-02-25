@@ -38,7 +38,7 @@ axios.defaults.headers.common.Accept = 'application/json';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
+new Vue({
   router,
   template: '<app />',
   components: { App },
