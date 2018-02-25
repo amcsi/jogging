@@ -56,7 +56,7 @@
           this.userList = responseData.data;
           this.paginationData = responseData.pagination;
         } catch (error) {
-          this.$root.$emit('handleGenericAjaxError', e, 'Failed to load user list');
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to load user list');
         }
         this.loading = false;
       }
