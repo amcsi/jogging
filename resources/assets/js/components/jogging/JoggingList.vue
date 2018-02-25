@@ -8,7 +8,14 @@
             <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
         </div>
 
-        <pagination :paginationData="paginationData" :change="reloadList" v-if="paginationData" />
+        <b-pagination
+            size="md"
+            :total-rows="paginationData.total"
+            :per-page="paginationData.per_page"
+            @change="reloadList"
+            v-model="page"
+            v-if="paginationData"
+        ></b-pagination>
 
         <spinner :loading="loading" />
 
@@ -38,7 +45,14 @@
                 </tbody>
             </table>
 
-            <pagination :paginationData="paginationData" :change="reloadList" />
+            <b-pagination
+                size="md"
+                :total-rows="paginationData.total"
+                :per-page="paginationData.per_page"
+                @change="reloadList"
+                v-model="page"
+                v-if="paginationData"
+            ></b-pagination>
         </div>
     </div>
 </template>
@@ -55,11 +69,13 @@
         loading: true,
         joggingTimes: [],
         paginationData: null,
+        page: 1,
         formatFraction: new Intl.NumberFormat([], { style: 'decimal', maximumFractionDigits: 2 }).format,
       };
     },
     methods: {
       async reloadList(page = 1) {
+        this.page = page;
         try {
           this.loading = true;
           const { data } = await axios.get('/api/jogging-times', { params: { page } });
@@ -69,6 +85,7 @@
             return joggingTime;
           });
           this.paginationData = data.pagination;
+          this.page = this.paginationData.current_page;
         } catch (error) {
           this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
         }
