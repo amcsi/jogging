@@ -1,5 +1,7 @@
 <template>
     <div>
+        <h1>Jogging list</h1>
+
         <spinner :loading="loading" />
 
         <div v-if="!loading">
