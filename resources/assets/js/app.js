@@ -15,11 +15,13 @@ import App from './App.vue';
 import JoggingList from './components/jogging/JoggingList';
 import UserList from './components/user/UserList';
 import FormFieldErrors from './globalComponents/FormFieldErrors';
+import Pagination from './globalComponents/Pagination';
 
 window.Vue = require('vue');
 Vue.use(BootstrapVue);
 Vue.component('spinner', spinner);
 Vue.component('form-field-errors', FormFieldErrors);
+Vue.component('pagination', Pagination);
 Vue.use(VModal);
 Vue.use(VueRouter);
 

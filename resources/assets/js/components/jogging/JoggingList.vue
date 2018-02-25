@@ -12,6 +12,7 @@
                 <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
             </div>
 
+            <pagination :paginationData="paginationData" :change="reloadList" />
 
             <table class="table b-table">
                 <thead>
@@ -36,6 +37,8 @@
                 </tr>
                 </tbody>
             </table>
+
+            <pagination :paginationData="paginationData" :change="reloadList" />
         </div>
     </div>
 </template>
@@ -51,19 +54,21 @@
       return {
         loading: true,
         joggingTimes: [],
+        paginationData: {},
         formatFraction: new Intl.NumberFormat([], { style: 'decimal', maximumFractionDigits: 2 }).format,
       };
     },
     methods: {
-      async reloadList() {
+      async reloadList(page = 1) {
         try {
           this.loading = true;
-          const { data } = await axios.get('/api/jogging-times');
+          const { data } = await axios.get('/api/jogging-times', { params: { page } });
           this.joggingTimes = data.data.map(joggingTime => {
             // For reactivity.
             joggingTime.deleted = false;
             return joggingTime;
           });
+          this.paginationData = data.pagination;
         } catch (error) {
           this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
         }

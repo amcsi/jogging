@@ -5,6 +5,8 @@
         <spinner :loading="loading" />
 
         <div v-if="!loading">
+            <pagination :paginationData="paginationData" :change="reloadList" />
+
             <table class="table b-table">
                 <thead>
                 <tr>
@@ -26,6 +28,8 @@
                 </tr>
                 </tbody>
             </table>
+
+            <pagination :paginationData="paginationData" :change="reloadList" />
         </div>
     </div>
 </template>
@@ -39,19 +43,25 @@
       return {
         userList: [],
         loading: true,
+        paginationData: {},
       };
     },
-    mounted() {
-      this.refreshList = async () => {
+    methods: {
+      async reloadList(page = 1) {
+        console.info(page);
         this.loading = true;
         try {
-          this.userList = (await axios.get('/api/users')).data.data;
+          const responseData = (await axios.get('/api/users', { params: { page } })).data;
+          this.userList = responseData.data;
+          this.paginationData = responseData.pagination;
         } catch (error) {
           this.$root.$emit('handleGenericAjaxError', e, 'Failed to load user list');
         }
         this.loading = false;
-      };
-      this.refreshList();
+      }
+    },
+    mounted() {
+      this.reloadList();
     },
   };
 </script>
