@@ -83,11 +83,7 @@
           this.$modal.hide('userEdit');
           this.$root.$emit('userChanged');
         } catch (error) {
-          this.$root.$emit('handleGenericAjaxError', error, 'Failed to update user');
-          try {
-            this.errors = error.response.data.errors;
-          } catch (e) {
-          }
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to update user', this);
         }
         this.loading = false;
       },

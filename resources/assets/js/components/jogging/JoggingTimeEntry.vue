@@ -93,11 +93,7 @@
           this.$modal.hide('joggingTimeEntry');
           this.$root.$emit('joggingTimeChanged');
         } catch (error) {
-          this.$root.$emit('handleGenericAjaxError', error, 'Failed to add new jogging entry');
-          try {
-            this.errors = error.response.data.errors;
-          } catch (e) {
-          }
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to add new jogging entry', this);
         }
         this.loading = false;
       },
@@ -113,11 +109,7 @@
           this.$modal.hide('joggingTimeEntry');
           this.$root.$emit('joggingTimeChanged');
         } catch (error) {
-          this.$root.$emit('handleGenericAjaxError', error, 'Failed to update jogging entry');
-          try {
-            this.errors = error.response.data.errors;
-          } catch (e) {
-          }
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to update jogging entry', this);
         }
         this.loading = false;
       },

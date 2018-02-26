@@ -18,8 +18,8 @@
   import axios from 'axios';
   import vueToast from 'vue-toast';
   import LoginRegistration from './components/LoginRegistration';
-  import toastRegisterer from './toastRegisterer';
   import NavBar from './components/NavBar';
+  import toastRegisterer from './toastRegisterer';
 
   export default {
     name: 'app',
@@ -66,8 +66,16 @@
         }).catch(error => {
           this.$root.$emit('handleGenericAjaxError', error, 'Failed to fetch user data');
         });
-      }).$on('handleGenericAjaxError', (error, message = 'An error has occurred') => {
+      }).$on('handleGenericAjaxError', (error, message = 'An error has occurred', vm = null) => {
         try {
+          if (vm) {
+            // Set validation errors on the component the event was fired from.
+            try {
+              vm.errors = error.response.data.errors;
+            } catch (e) {
+            }
+          }
+
           if (error.response.data.message) {
             toast.displayError(`${message}: ${error.response.data.message}`);
             return;
