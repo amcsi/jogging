@@ -108,7 +108,7 @@
         try {
             await axios.delete('/api/jogging-times/' + joggingTime.id);
             joggingTime.deleted = true;
-            console.info('jogging time deleted');
+            toast.displaySuccess('Successfully deleted jogging entry.');
         } catch (error) {
           try {
             this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete jogging entry');
