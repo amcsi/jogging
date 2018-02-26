@@ -19,8 +19,8 @@ class JoggingTimeTransformer
     {
         return array_replace($this->modelTransformer->__invoke($joggingTime),
             [
-                'distance_m' => (int) $joggingTime->distance_m,
-                'minutes' => (int) $joggingTime->minutes,
+                'distance_m' => (int)$joggingTime->distance_m,
+                'minutes' => (int)$joggingTime->minutes,
                 'day' => $joggingTime->day,
             ]);
     }

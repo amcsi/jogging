@@ -19,8 +19,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users/me', 'UserController@me');
     Route::prefix('/users/{user}')->group(function () {
         Route::get('/', 'UserController@show');
-        Route::get('/jogging-times', 'JoggingTimeController@index');
-        Route::post('/jogging-times', 'JoggingTimeController@store');
+        Route::prefix('jogging-times')->group(function () {
+            Route::get('/', 'JoggingTimeController@index');
+            Route::get('/by-week', 'JoggingTime\JoggingTimeByWeekController@index');
+            Route::post('/', 'JoggingTimeController@store');
+        });
     });
     Route::put('/users/{user}', 'UserController@update');
     Route::delete('/users/{user}', 'UserController@destroy');
