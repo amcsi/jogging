@@ -116,6 +116,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'distance_m' => 'distance (meters)',
+        'day' => 'date of jogging',
+    ],
 
 ];
