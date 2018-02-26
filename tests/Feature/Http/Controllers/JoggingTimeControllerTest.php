@@ -15,13 +15,13 @@ final class JoggingTimeControllerTest extends TestCase
 
     public function testStoreRequiresAuthenticatedUser(): void
     {
-        $response = $this->post('/api/jogging-times', []);
+        $response = $this->post('/api/users/1/jogging-times', []);
         $response->assertStatus(401);
     }
 
     public function testStore(): void
     {
-        Passport::actingAs($this->admin);
+        Passport::actingAs($this->user);
 
         $minutes = 5;
         $distanceM = 1000;
@@ -31,7 +31,8 @@ final class JoggingTimeControllerTest extends TestCase
             'distance_m' => $distanceM,
             'day' => $day,
         ];
-        $response = $this->post('/api/jogging-times', $postData);
+        $response = $this->post("/api/users/{$this->user->id}/jogging-times", $postData);
+        $responseData = $this->assertSuccesfulResponseData($response);
 
         $joggingTimes = JoggingTime::all();
         $this->assertCount(1, $joggingTimes);
@@ -41,14 +42,12 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertSame($distanceM, (int) $joggingTime['distance_m']);
         $this->assertSame($day, $joggingTime['day']);
 
-        $responseData = $this->assertSuccesfulResponseData($response);
-
         $this->assertSame($minutes, $responseData['minutes']);
         $this->assertSame($distanceM, $responseData['distance_m']);
         $this->assertSame($day, $responseData['day']);
 
         // Cannot post this jogging time again due to duplicate day for the user.
-        $response = $this->post('/api/jogging-times', $postData);
+        $response = $this->post("/api/users/{$this->user->id}/jogging-times", $postData);
         $response->assertStatus(409);
         $response->assertJson([
             'errors' => [
@@ -59,11 +58,11 @@ final class JoggingTimeControllerTest extends TestCase
 
     public function testIndex(): void
     {
-        Passport::actingAs($this->admin);
+        Passport::actingAs($this->user);
 
-        factory(JoggingTime::class, 5)->create(['user_id' => $this->admin->id]);
+        factory(JoggingTime::class, 5)->create(['user_id' => $this->user->id]);
 
-        $response = $this->get('/api/jogging-times?limit=2');
+        $response = $this->get("/api/users/{$this->user->id}/jogging-times?limit=2");
 
         $responseData = $this->assertSuccesfulResponseData($response);
         $this->assertCount(2, $responseData);
@@ -75,7 +74,7 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertGreaterThan($responseData[1]['day'], $responseData[0]['day'], $message);
         $this->assertArrayHasKey('id', $responseData[0]);
 
-        $response = $this->get('/api/jogging-times?limit=2&page=2');
+        $response = $this->get("/api/users/{$this->user->id}/jogging-times?limit=2&page=2");
 
         $this->assertCount(2, $this->assertSuccesfulResponseData($response));
         $paginationData = $this->assertPagination($response);
@@ -83,7 +82,7 @@ final class JoggingTimeControllerTest extends TestCase
         $this->assertSame(2, $paginationData['current_page']);
         $this->assertSame(5, $paginationData['total']);
 
-        $response = $this->get('/api/jogging-times?limit=2&page=3');
+        $response = $this->get("/api/users/{$this->user->id}/jogging-times?limit=2&page=3");
 
         $this->assertCount(1, $this->assertSuccesfulResponseData($response));
         $paginationData = $this->assertPagination($response);

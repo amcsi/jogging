@@ -26,15 +26,15 @@ class JoggingTimePolicy
         return null;
     }
 
-    /**
-     * Determine whether the user can create joggingTimes.
-     *
-     * @param  \App\User $user
-     * @return mixed
-     */
-    public function create(User $user)
+    public function index(User $user, User $forUser): bool
     {
-        return true;
+        // The user ids must be the same.
+        return $user->id === $forUser->id;
+    }
+
+    public function create(User $user, User $forUser): bool
+    {
+        return $this->index($user, $forUser);
     }
 
     /**

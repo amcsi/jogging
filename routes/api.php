@@ -12,14 +12,16 @@
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/jogging-times', 'JoggingTimeController@index');
     Route::put('/jogging-times/{joggingTime}', 'JoggingTimeController@update');
-    Route::post('/jogging-times', 'JoggingTimeController@store');
     Route::delete('/jogging-times/{joggingTime}', 'JoggingTimeController@destroy');
 
     Route::get('/users', 'UserController@index');
     Route::get('/users/me', 'UserController@me');
-    Route::get('/users/{user}', 'UserController@show');
+    Route::prefix('/users/{user}')->group(function () {
+        Route::get('/', 'UserController@show');
+        Route::get('/jogging-times', 'JoggingTimeController@index');
+        Route::post('/jogging-times', 'JoggingTimeController@store');
+    });
     Route::put('/users/{user}', 'UserController@update');
     Route::delete('/users/{user}', 'UserController@destroy');
 });

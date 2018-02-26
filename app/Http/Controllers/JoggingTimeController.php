@@ -8,6 +8,7 @@ use App\Common\UniqueIndex;
 use App\Http\Requests\PagingRequest;
 use App\JoggingTime;
 use App\JoggingTime\JoggingTimeTransformer;
+use App\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,18 +18,20 @@ class JoggingTimeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(JoggingTimeTransformer $joggingTimeTransformer, PagingRequest $request)
+    public function index(JoggingTimeTransformer $joggingTimeTransformer, User $user, PagingRequest $request)
     {
-        $joggingTimes = JoggingTime::where('user_id', $request->user()->id)
+        $this->authorize('index', [JoggingTime::class, $user]);
+
+        $joggingTimes = JoggingTime::where('user_id', $user->id)
             ->orderBy('day', 'desc')
             ->paginate($request->getLimit());
 
         return JsonResponder::respond($joggingTimes, $joggingTimeTransformer);
     }
 
-    public function store(Request $request, JoggingTimeTransformer $joggingTimeTransformer)
+    public function store(Request $request, User $user, JoggingTimeTransformer $joggingTimeTransformer)
     {
-        $this->authorize('create', JoggingTime::class);
+        $this->authorize('create', [JoggingTime::class, $user]);
 
         $data = $request->validate([
             'distance_m' => 'required|integer|min:1',
@@ -37,7 +40,7 @@ class JoggingTimeController extends Controller
         ]);
 
         $joggingTime = new JoggingTime($data);
-        $joggingTime->user_id = $request->user()->id;
+        $joggingTime->user_id = $user->id;
         try {
             $joggingTime->save();
         } catch (QueryException $exception) {
