@@ -36,7 +36,7 @@ class JoggingTimeController extends Controller
         $data = $request->validate([
             'distance_m' => 'required|integer|min:1',
             'minutes' => 'required|integer|min:1',
-            'day' => 'required|date|date_format:Y-m-d|before:tomorrow',
+            'day' => 'required|date|date_format:Y-m-d|before_or_equal:today',
         ]);
 
         $joggingTime = new JoggingTime($data);
