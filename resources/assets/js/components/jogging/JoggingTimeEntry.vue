@@ -64,7 +64,7 @@
   /** @class JoggingNewForm */
   export default {
     name: 'jogging-new-form',
-    props: ['currentUser'],
+    props: ['user'],
     data: getInititialState,
     methods: {
       beforeOpen(event) {
@@ -84,7 +84,7 @@
         this.loading = true;
         this.errors = {};
         try {
-          await axios.post('/api/jogging-times', {
+          await axios.post(`/api/users/${this.user.id}/jogging-times`, {
             day: this.day,
             minutes: this.minutes,
             distance_m: this.distance_m,

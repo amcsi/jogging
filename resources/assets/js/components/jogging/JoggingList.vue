@@ -3,7 +3,7 @@
         <h1>Jogging list</h1>
 
         <div>
-            <jogging-time-entry :currentUser="currentUser" />
+            <jogging-time-entry :user="user" />
 
             <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
         </div>
@@ -62,7 +62,7 @@
 
   export default {
     name: "jogging-list",
-    props: ['currentUser'],
+    props: ['user'],
     components: { JoggingTimeEntry: JoggingTimeEntry },
     data() {
       return {
@@ -78,7 +78,7 @@
         this.page = page;
         try {
           this.loading = true;
-          const { data } = await axios.get('/api/jogging-times', { params: { page } });
+          const { data } = await axios.get(`/api/users/${this.user.id}/jogging-times`, { params: { page } });
           this.joggingTimes = data.data.map(joggingTime => {
             // For reactivity.
             joggingTime.deleted = false;

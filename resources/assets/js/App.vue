@@ -8,7 +8,7 @@
             <login-registration v-if="!userData" />
 
             <div v-if="userData">
-                <router-view :currentUser="userData" />
+                <router-view :user="userData" />
             </div>
         </b-container>
     </div>
