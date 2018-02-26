@@ -13,6 +13,7 @@ import spinner from 'vue-spinner/src/PulseLoader.vue';
 import 'vue-toast/dist/vue-toast.min.css';
 import App from './App.vue';
 import JoggingList from './components/jogging/JoggingList';
+import JoggingWeekly from './components/jogging/JoggingWeekly';
 import UserContext from './components/user/UserContext';
 import UserList from './components/user/UserList';
 import FormFieldErrors from './globalComponents/FormFieldErrors';
@@ -27,6 +28,7 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   routes: [
     { path: '/', component: JoggingList },
+    { path: '/jogging-weekly', component: JoggingWeekly },
     { path: '/users', component: UserList },
     {
       path: '/users/:userId', component: UserContext, children: [
