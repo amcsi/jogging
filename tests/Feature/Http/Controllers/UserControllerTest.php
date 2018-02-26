@@ -77,6 +77,15 @@ class UserControllerTest extends TestCase
         $this->assertPagination($response);
     }
 
+    public function testShow(): void
+    {
+        Passport::actingAs($this->admin);
+
+        $response = $this->get('/api/users/' . $this->user->id);
+        $responseData = $this->assertSuccesfulResponseData($response);
+        $this->assertSame($this->user->id, $responseData['id']);
+    }
+
     public function testRegularUserCannotChangeOwnEmail(): void
     {
         Passport::actingAs($this->user);

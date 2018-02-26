@@ -27,7 +27,14 @@ class UserController extends Controller
 
     public function me(UserTransformer $userTransformer, Request $request)
     {
-        return JsonResponder::respond($request->user(), $userTransformer);
+        return $this->show($userTransformer, $request, $request->user());
+    }
+
+    public function show(UserTransformer $userTransformer, Request $request, User $user)
+    {
+        $this->authorize('view', $user);
+
+        return JsonResponder::respond($user, $userTransformer);
     }
 
     public function store(Request $request): array
