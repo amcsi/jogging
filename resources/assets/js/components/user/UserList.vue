@@ -32,6 +32,9 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td>
+                        <router-link v-if="currentUser.role === ROLE_ADMIN" :to="`users/${user.id}/jogging-times`"
+                            title="View jogging times">🏃
+                        </router-link>
                         <i class="fa fa-pencil clickable" @click="$modal.show('userEdit', { user })"></i>
                         <i class="fa fa-trash clickable" @click="deleteUser(user)"></i>
                     </td>
@@ -52,15 +55,17 @@
 </template>
 
 <script>
+  import { ADMIN } from '../../constants/userRole';
   import UserEdit from './UserEdit';
 
   /** @class UserList */
   export default {
     name: 'user-list',
     components: { UserEdit },
-    props: ['userData'],
+    props: ['currentUser'],
     data() {
       return {
+        ROLE_ADMIN: ADMIN,
         userList: [],
         loading: true,
         paginationData: null,

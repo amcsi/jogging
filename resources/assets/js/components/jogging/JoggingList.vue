@@ -1,9 +1,10 @@
 <template>
     <div>
-        <h1>Jogging list</h1>
+        <h1 v-if="forCurrentUser">Jogging list</h1>
+        <h1 v-else>Jogging list ({{ targetUser.email }})</h1>
 
         <div>
-            <jogging-time-entry :user="user" />
+            <jogging-time-entry :user="targetUser" />
 
             <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
         </div>
@@ -62,7 +63,7 @@
 
   export default {
     name: "jogging-list",
-    props: ['user'],
+    props: ['currentUser', 'user'],
     components: { JoggingTimeEntry: JoggingTimeEntry },
     data() {
       return {
@@ -73,12 +74,20 @@
         formatFraction: new Intl.NumberFormat([], { style: 'decimal', maximumFractionDigits: 2 }).format,
       };
     },
+    computed: {
+      targetUser() {
+        return this.user || this.currentUser;
+      },
+      forCurrentUser() {
+        return !this.user;
+      },
+    },
     methods: {
       async reloadList(page = 1) {
         this.page = page;
         try {
           this.loading = true;
-          const { data } = await axios.get(`/api/users/${this.user.id}/jogging-times`, { params: { page } });
+          const { data } = await axios.get(`/api/users/${this.targetUser.id}/jogging-times`, { params: { page } });
           this.joggingTimes = data.data.map(joggingTime => {
             // For reactivity.
             joggingTime.deleted = false;
