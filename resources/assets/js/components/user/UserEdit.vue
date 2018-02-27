@@ -26,7 +26,7 @@
             </b-form-group>
 
             <b-form-group
-                v-if="currentUser.role === ROLE_ADMIN"
+                v-if="currentUser.role === ROLE_ADMIN && currentUser.id !== id"
                 horizontal
                 :label-cols="4"
                 label="Role"
