@@ -9,6 +9,14 @@
             <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
         </div>
 
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Filter by dates</span>
+            </div>
+            <datepicker class="form-control" placeholder="From" v-model="dateFrom" />
+            <datepicker class="form-control" placeholder="To" v-model="dateTo" />
+        </div>
+
         <b-pagination
             size="md"
             :total-rows="paginationData.total"
@@ -82,6 +90,8 @@
         paginationData: null,
         page: 1,
         formatFraction: new Intl.NumberFormat([], { style: 'decimal', maximumFractionDigits: 2 }).format,
+        dateFrom: '',
+        dateTo: '',
       };
     },
     computed: {
@@ -92,12 +102,29 @@
         return !this.user;
       },
     },
+    watch: {
+      dateFrom() {
+        // TODO: Probably would be better to separate jogging list as a child component under these filters.
+        this.reloadList();
+      },
+      dateTo() {
+        this.reloadList();
+      },
+    },
     methods: {
       async reloadList(page = 1) {
         this.page = page;
         try {
           this.loading = true;
-          const { data } = await axios.get(`/api/users/${this.targetUser.id}/jogging-times`, { params: { page } });
+          const { dateFrom, dateTo } = this;
+          const params = { page };
+          if (dateFrom) {
+            params.dateFrom = dateFrom;
+          }
+          if (dateTo) {
+            params.dateTo = dateTo;
+          }
+          const { data } = await axios.get(`/api/users/${this.targetUser.id}/jogging-times`, { params });
           this.joggingTimes = data.data.map(joggingTime => {
             // For reactivity.
             joggingTime.deleted = false;

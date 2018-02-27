@@ -9,6 +9,7 @@ use App\Http\Requests\PagingRequest;
 use App\JoggingTime;
 use App\JoggingTime\JoggingTimeTransformer;
 use App\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,7 +23,20 @@ class JoggingTimeController extends Controller
     {
         $this->authorize('index', [JoggingTime::class, $user]);
 
-        $joggingTimes = JoggingTime::where('user_id', $user->id)
+        $data = $request->validate([
+            'dateFrom' => 'nullable|date',
+            'dateTo' => 'nullable|date',
+        ]);
+
+        /** @var Builder $builder */
+        $builder = JoggingTime::where('user_id', $user->id);
+        if (isset($data['dateFrom'])) {
+            $builder->where('day', '>=', $data['dateFrom']);
+        }
+        if (isset($data['dateTo'])) {
+            $builder->where('day', '<=', $data['dateTo']);
+        }
+        $joggingTimes = $builder
             ->orderBy('day', 'desc')
             ->paginate($request->getLimit());
 
