@@ -20,7 +20,11 @@
                 :label-cols="4"
                 label="Distance (meters)"
             >
-                <b-form-input name="distance_m" v-model.trim="distance_m" placeholder="500"></b-form-input>
+                <div class="container-with-input-and-right-label">
+                    <b-form-input class="number-input-width" name="distance_m" v-model.trim="distance_m"></b-form-input>
+
+                    <div class="right-label">meters</div>
+                </div>
 
                 <form-field-errors :errors="errors.distance_m" />
             </b-form-group>
@@ -30,7 +34,11 @@
                 :label-cols="4"
                 label="Minutes spent running"
             >
-                <b-form-input name="minutes" v-model.trim="minutes"></b-form-input>
+                <div class="container-with-input-and-right-label">
+                    <b-form-input class="number-input-width" name="minutes" v-model.trim="minutes"></b-form-input>
+
+                    <div class="right-label">minutes</div>
+                </div>
 
                 <form-field-errors :errors="errors.minutes" />
             </b-form-group>
@@ -125,5 +133,18 @@
 <style scoped>
     .joggingTimeEntry {
         margin: 10px;
+    }
+
+    .container-with-input-and-right-label {
+        display: flex;
+        align-items: center;
+    }
+
+    .number-input-width {
+        width: 100px;
+    }
+
+    .right-label {
+        margin-left: 10px;
     }
 </style>
