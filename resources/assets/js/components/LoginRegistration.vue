@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="login">
+    <form @submit.prevent="$root.$emit('doLogin', { email, password, vm: this })">
         <h2>Login form</h2>
 
         <b-form-group horizontal
@@ -21,8 +21,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
-
   export default {
     name: "login-registration",
     data() {
@@ -31,18 +29,6 @@
         password: '',
         passwordConfirm: '',
       };
-    },
-    methods: {
-      login() {
-        axios.post('/api/login', {
-          username: this.email,
-          password: this.password,
-        }).then(({ data }) => {
-          this.$root.$emit('newTokenReceived', { token: data.access_token });
-        }).catch(error => {
-          this.$root.$emit('handleGenericAjaxError', error, 'Failed to log in');
-        });
-      },
     },
   };
 </script>

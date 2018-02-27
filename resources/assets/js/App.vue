@@ -2,15 +2,19 @@
     <div>
         <vue-toast ref="toast" />
 
-        <nav-bar :userData="userData" />
+        <spinner v-if="loading" />
 
-        <b-container>
-            <login-registration v-if="!userData" />
+        <div v-else>
+            <nav-bar :userData="userData" />
 
-            <div v-if="userData">
-                <router-view :currentUser="userData" />
-            </div>
-        </b-container>
+            <b-container>
+                <login-registration v-if="!userData" />
+
+                <div v-if="userData">
+                    <router-view :currentUser="userData" />
+                </div>
+            </b-container>
+        </div>
     </div>
 </template>
 
@@ -28,6 +32,7 @@
       return {
         token: localStorage.getItem('token') || '',
         userData: JSON.parse(localStorage.getItem('userData')) || '',
+        loading: false,
       };
     },
     created() {
@@ -56,16 +61,22 @@
     mounted() {
       toastRegisterer(this.$refs.toast);
 
-      this.$root.$on('newTokenReceived', ({ token }) => {
-
-        this.setToken(token);
-
-        axios.get('/api/users/me').then(({ data }) => {
-          this.setUserData(data.data);
+      this.$root.$on('doLogin', async ({ email, password, vm }) => {
+        this.loading = true;
+        try {
+          const { data } = await axios.post('/api/login', {
+            password,
+            username: email,
+          });
+          const { access_token } = data;
+          this.setToken(access_token);
+          const { data: userData } = await axios.get('/api/users/me');
+          this.setUserData(userData.data);
           toast.displaySuccess('Login successful!');
-        }).catch(error => {
-          this.$root.$emit('handleGenericAjaxError', error, 'Failed to fetch user data');
-        });
+        } catch (error) {
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to log in', vm);
+        }
+        this.loading = false;
       }).$on('handleGenericAjaxError', (error, message = 'An error has occurred', vm = null) => {
         try {
           if (vm) {
