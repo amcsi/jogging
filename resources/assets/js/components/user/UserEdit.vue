@@ -31,7 +31,7 @@
                 :label-cols="4"
                 label="Role"
             >
-                <b-form-input name="role" v-model.trim="role"></b-form-input>
+                <b-form-select name="role" v-model.trim="role" :options="roleSelectOptions" />
 
                 <form-field-errors :errors="errors.role" />
             </b-form-group>
@@ -48,13 +48,14 @@
 </template>
 
 <script>
-  import { ADMIN } from '../../constants/userRole';
+  import { ADMIN, selectOptions } from '../../constants/userRole';
 
   /** @class UserEdit */
   export default {
     name: 'user-edit',
     data() {
       return {
+        roleSelectOptions: selectOptions,
         loading: false,
         errors: {},
         id: '',
