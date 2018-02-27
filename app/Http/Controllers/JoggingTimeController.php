@@ -61,7 +61,12 @@ class JoggingTimeController extends Controller
     {
         $this->authorize('update', $joggingTime);
 
-        $joggingTime->fill($request->toArray());
+        $data = $request->validate([
+            'distance_m' => 'integer|min:1',
+            'minutes' => 'integer|min:1',
+        ]);
+
+        $joggingTime->fill($data);
         $joggingTime->save();
 
         return JsonResponder::respond($joggingTime, $joggingTimeTransformer);
