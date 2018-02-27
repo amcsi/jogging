@@ -16,10 +16,12 @@ import JoggingList from './components/jogging/JoggingList';
 import JoggingWeekly from './components/jogging/JoggingWeekly';
 import UserContext from './components/user/UserContext';
 import UserList from './components/user/UserList';
+import Day from './globalComponents/Day';
 import FormFieldErrors from './globalComponents/FormFieldErrors';
 
 window.Vue = require('vue');
 Vue.use(BootstrapVue);
+Vue.component('day', Day);
 Vue.component('spinner', spinner);
 Vue.component('form-field-errors', FormFieldErrors);
 Vue.use(VModal);

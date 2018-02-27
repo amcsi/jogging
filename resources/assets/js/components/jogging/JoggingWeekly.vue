@@ -17,7 +17,11 @@
                 </thead>
                 <tbody>
                 <tr v-for="joggingTime in joggingTimes" v-if="! joggingTime.deleted">
-                    <td>{{ joggingTime.first_day }} - {{ joggingTime.last_day }}</td>
+                    <td>
+                        <day :day="joggingTime.first_day" />
+                        -
+                        <day :day="joggingTime.last_day" />
+                    </td>
                     <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
                     <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
                     <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }} km/h</td>
