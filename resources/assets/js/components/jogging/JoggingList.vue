@@ -33,18 +33,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="joggingTime in joggingTimes" v-if="! joggingTime.deleted">
-                    <td>
-                        <day :day="joggingTime.day" />
-                    </td>
-                    <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
-                    <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
-                    <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }} km/h</td>
-                    <td>
-                        <i class="fa fa-pencil clickable" @click="$modal.show('joggingTimeEntry', {joggingTime})"></i>
-                        <i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i>
-                    </td>
-                </tr>
+
+                <template v-for="joggingTime in joggingTimes">
+                    <transition name="fade">
+                        <tr v-if="! joggingTime.deleted">
+                            <td>
+                                <day :day="joggingTime.day" />
+                            </td>
+                            <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
+                            <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
+                            <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }}
+                                km/h
+                            </td>
+                            <td>
+                                <i class="fa fa-pencil clickable"
+                                    @click="$modal.show('joggingTimeEntry', {joggingTime})"></i>
+                                <i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i>
+                            </td>
+                        </tr>
+                    </transition>
+                </template>
                 </tbody>
             </table>
 
@@ -108,15 +116,17 @@
         }
 
         try {
-            await axios.delete('/api/jogging-times/' + joggingTime.id);
-            joggingTime.deleted = true;
-            toast.displaySuccess('Successfully deleted jogging entry.');
+          await axios.delete('/api/jogging-times/' + joggingTime.id);
+          joggingTime.deleted = true;
+          toast.displaySuccess('Successfully deleted jogging entry.');
         } catch (error) {
           try {
             this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete jogging entry');
-          } catch (e) {};
+          } catch (e) {
+          }
+          ;
         }
-      }
+      },
     },
     mounted() {
       this.reloadList();
@@ -129,5 +139,14 @@
 <style scoped>
     .clickable {
         cursor: pointer;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+    {
+        opacity: 0;
     }
 </style>

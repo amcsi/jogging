@@ -27,18 +27,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="user in userList" v-if="! user.deleted">
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.role }}</td>
-                    <td>
-                        <router-link v-if="currentUser.role === ROLE_ADMIN" :to="`users/${user.id}/jogging-times`"
-                            title="View jogging times">🏃
-                        </router-link>
-                        <i class="fa fa-pencil clickable" @click="$modal.show('userEdit', { user })"></i>
-                        <i class="fa fa-trash clickable" @click="deleteUser(user)"></i>
-                    </td>
-                </tr>
+                <template v-for="user in userList">
+                    <transition name="fade">
+                        <tr v-if="! user.deleted">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <router-link v-if="currentUser.role === ROLE_ADMIN"
+                                    :to="`users/${user.id}/jogging-times`"
+                                    title="View jogging times">🏃
+                                </router-link>
+                                <i class="fa fa-pencil clickable" @click="$modal.show('userEdit', { user })"></i>
+                                <i class="fa fa-trash clickable" @click="deleteUser(user)"></i>
+                            </td>
+                        </tr>
+                    </transition>
+                </template>
                 </tbody>
             </table>
 
@@ -102,7 +107,7 @@
         } catch (error) {
           this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete user');
         }
-      }
+      },
     },
     mounted() {
       this.reloadList(this.page);
@@ -115,5 +120,14 @@
 <style scoped>
     .clickable {
         cursor: pointer;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+    {
+        opacity: 0;
     }
 </style>
