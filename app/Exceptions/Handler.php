@@ -7,6 +7,8 @@ use App\Common\ApiFieldErrorsException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use Psr\Log\LoggerInterface;
 
 class Handler extends ExceptionHandler
 {
@@ -16,7 +18,6 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        \League\OAuth2\Server\Exception\OAuthServerException::class,
     ];
 
     /**
@@ -39,7 +40,20 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        parent::report($exception);
+        if ($exception instanceof OAuthServerException) {
+            try {
+                $logger = $this->container->make(LoggerInterface::class);
+            } catch (Exception $e) {
+                throw $exception; // throw the original exception
+            }
+
+            $logger->error(
+                $exception->getMessage(),
+                ['exception' => $exception]
+            );
+        } else {
+            parent::report($exception);
+        }
     }
 
     /**
