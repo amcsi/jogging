@@ -25,7 +25,9 @@
                 <form-field-errors :errors="errors.password" />
             </b-form-group>
 
-            <b-form-group horizontal
+            <b-form-group
+                v-if="currentUser.role === ROLE_ADMIN"
+                horizontal
                 :label-cols="4"
                 label="Role"
             >
@@ -46,6 +48,8 @@
 </template>
 
 <script>
+  import { ADMIN } from '../../constants/userRole';
+
   /** @class UserEdit */
   export default {
     name: 'user-edit',
@@ -57,6 +61,8 @@
         email: '',
         password: '',
         role: '',
+        ROLE_ADMIN: ADMIN,
+        currentUser: {},
       };
     },
     methods: {
@@ -64,7 +70,8 @@
         // Reset this modal to its initial state (for creating a new entry), then change it if
         // This is for editing an existing entry.
         const { id, email, role } = event.params.user;
-        Object.assign(this.$data, this.$options.data.apply(this), { id, email, role });
+        const { currentUser } = event.params;
+        Object.assign(this.$data, this.$options.data.apply(this), { id, email, role, currentUser });
       },
       async save() {
         this.loading = true;

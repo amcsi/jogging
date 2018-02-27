@@ -38,7 +38,8 @@
                                     :to="`users/${user.id}/jogging-times`"
                                     title="View jogging times">🏃
                                 </router-link>
-                                <i class="fa fa-pencil clickable" @click="$modal.show('userEdit', { user })"></i>
+                                <i class="fa fa-pencil clickable"
+                                    @click="$modal.show('userEdit', { user, currentUser })"></i>
                                 <i class="fa fa-trash clickable" @click="deleteUser(user)"></i>
                             </td>
                         </tr>
