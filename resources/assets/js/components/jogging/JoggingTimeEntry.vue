@@ -11,7 +11,10 @@
                 label="Date"
             >
                 <b-form-input v-if="! id" name="day" v-model.trim="day"></b-form-input>
-                <span v-if="id">{{ day }}</span>
+                <div
+                    v-if="id"
+                    class="align-day"
+                ><day :day="day" /></div>
 
                 <form-field-errors :errors="errors.day" />
             </b-form-group>
@@ -146,5 +149,11 @@
 
     .right-label {
         margin-left: 10px;
+    }
+
+    .align-day {
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 </style>
