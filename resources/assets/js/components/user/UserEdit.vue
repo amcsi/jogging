@@ -1,6 +1,6 @@
 <template>
     <modal name="userEdit" height="auto" scrollable @before-open="beforeOpen">
-        <form @submit.prevent="save" class="user" @keyup="clearError" style="margin: 10px;">
+        <form @submit.prevent="save" class="userEditForm" @keyup="clearError" style="margin: 10px;">
 
             <h2>Edit user</h2>
 
@@ -97,5 +97,8 @@
 </script>
 
 <style scoped>
-
+    .userEditForm {
+        margin: 0 10px;
+        padding: 10px 0;
+    }
 </style>
