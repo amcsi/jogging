@@ -10,7 +10,7 @@
                 :label-cols="4"
                 label="Date"
             >
-                <b-form-input v-if="! id" name="day" v-model.trim="day"></b-form-input>
+                <datepicker v-if="! id" name="day" v-model.trim="day"></datepicker>
                 <div
                     v-if="id"
                     class="align-day"
@@ -133,9 +133,10 @@
   };
 </script>
 
-<style scoped>
+<style>
     .joggingTimeEntry {
-        margin: 10px;
+        margin: 0 10px;
+        padding: 10px 0;
     }
 
     .container-with-input-and-right-label {
@@ -155,5 +156,10 @@
         height: 100%;
         display: flex;
         align-items: center;
+    }
+
+    .v--modal-overlay .v--modal-box {
+        /* This is to allow the datepicker to pop out */
+        overflow: visible;
     }
 </style>
