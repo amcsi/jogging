@@ -17,53 +17,7 @@
             <datepicker class="form-control" placeholder="To" v-model="dateTo" />
         </div>
 
-        <b-pagination
-            size="md"
-            :total-rows="paginationData.total"
-            :per-page="paginationData.per_page"
-            @change="reloadList"
-            v-model="page"
-            v-if="paginationData"
-        ></b-pagination>
-
-        <spinner :loading="loading" />
-
-        <div v-if="!loading">
-
-            <table class="table b-table">
-                <thead>
-                <tr>
-                    <th aria-colindex="1">Date</th>
-                    <th aria-colindex="2">Distance</th>
-                    <th aria-colindex="3">Time (minutes)</th>
-                    <th aria-colindex="4">Average speed</th>
-                    <th aria-colindex="5">&nbsp</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <template v-for="joggingTime in joggingTimes">
-                    <transition name="fade">
-                        <tr v-if="! joggingTime.deleted">
-                            <td>
-                                <day :day="joggingTime.day" />
-                            </td>
-                            <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
-                            <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
-                            <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }}
-                                km/h
-                            </td>
-                            <td>
-                                <i class="fa fa-pencil clickable"
-                                    @click="$modal.show('joggingTimeEntry', {joggingTime})"></i>
-                                <i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i>
-                            </td>
-                        </tr>
-                    </transition>
-                </template>
-                </tbody>
-            </table>
-
+        <div v-if="joggingTimes.length">
             <b-pagination
                 size="md"
                 :total-rows="paginationData.total"
@@ -72,6 +26,57 @@
                 v-model="page"
                 v-if="paginationData"
             ></b-pagination>
+
+            <spinner :loading="loading" />
+
+            <div v-if="!loading">
+
+                <table class="table b-table">
+                    <thead>
+                    <tr>
+                        <th aria-colindex="1">Date</th>
+                        <th aria-colindex="2">Distance</th>
+                        <th aria-colindex="3">Time (minutes)</th>
+                        <th aria-colindex="4">Average speed</th>
+                        <th aria-colindex="5">&nbsp</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <template v-for="joggingTime in joggingTimes">
+                        <transition name="fade">
+                            <tr v-if="! joggingTime.deleted">
+                                <td>
+                                    <day :day="joggingTime.day" />
+                                </td>
+                                <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
+                                <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
+                                <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }}
+                                    km/h
+                                </td>
+                                <td>
+                                    <i class="fa fa-pencil clickable"
+                                        @click="$modal.show('joggingTimeEntry', {joggingTime})"></i>
+                                    <i class="fa fa-trash clickable" @click="deleteJoggingTime(joggingTime)"></i>
+                                </td>
+                            </tr>
+                        </transition>
+                    </template>
+                    </tbody>
+                </table>
+
+                <b-pagination
+                    size="md"
+                    :total-rows="paginationData.total"
+                    :per-page="paginationData.per_page"
+                    @change="reloadList"
+                    v-model="page"
+                    v-if="paginationData"
+                ></b-pagination>
+            </div>
+        </div>
+        <div v-else>
+            <p>There are no jogging time entries.</p>
         </div>
     </div>
 </template>
