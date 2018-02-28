@@ -6,7 +6,7 @@
 
         <div v-if="!loading">
 
-            <table class="table b-table">
+            <table class="table b-table" v-if="joggingTimes.length">
                 <thead>
                 <tr>
                     <th aria-colindex="1">Dates</th>
@@ -28,6 +28,9 @@
                 </tr>
                 </tbody>
             </table>
+            <div v-else>
+                <p>There are no jogging entries.</p>
+            </div>
         </div>
     </div>
 </template>
