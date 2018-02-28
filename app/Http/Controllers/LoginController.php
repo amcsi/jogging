@@ -4,9 +4,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 
+use App\Common\ApiException;
+use App\Common\ApiExceptionCode;
+use App\User;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LoginController extends Controller
 {
@@ -30,6 +34,10 @@ class LoginController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
+
+        if (!User::where('email', $data['email'])->count()) {
+            throw new ApiException('User with an email not found', ApiExceptionCode::EMAIL_NOT_FOUND, 404);
+        }
 
         $request->request->add([
             'username' => $data['email'],
