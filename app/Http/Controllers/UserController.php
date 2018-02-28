@@ -22,7 +22,11 @@ class UserController extends Controller
     {
         $this->authorize('list', User::class);
 
-        return JsonResponder::respond(User::orderBy('email')->paginate($request->getLimit()), $userListTransformer);
+        $search = $request->search ?: '';
+
+        $users = User::orderBy('email')->where('email', 'like', "%$search%")->paginate($request->getLimit());
+
+        return JsonResponder::respond($users, $userListTransformer);
     }
 
     public function me(UserTransformer $userTransformer, Request $request)

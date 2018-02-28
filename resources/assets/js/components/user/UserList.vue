@@ -4,6 +4,8 @@
 
         <userEdit />
 
+        <b-form-input placeholder="Search" v-model="search" />
+
         <b-pagination
             size="md"
             :total-rows="paginationData.total"
@@ -61,6 +63,7 @@
 </template>
 
 <script>
+  import debounce from 'debounce';
   import { ADMIN } from '../../constants/userRole';
   import UserEdit from './UserEdit';
 
@@ -76,14 +79,21 @@
         loading: true,
         paginationData: null,
         page: 1,
+        search: '',
       };
+    },
+    watch: {
+      search: debounce(function () {
+        this.reloadList(1);
+      }, 500),
     },
     methods: {
       async reloadList(page = 1) {
         this.page = page;
         this.loading = true;
         try {
-          const responseData = (await axios.get('/api/users', { params: { page } })).data;
+          const { search } = this;
+          const responseData = (await axios.get('/api/users', { params: { page, search } })).data;
           this.userList = responseData.data.map(item => {
             // For reactivity.
             item.deleted = false;
