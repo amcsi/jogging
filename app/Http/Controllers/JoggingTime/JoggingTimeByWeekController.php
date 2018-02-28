@@ -29,6 +29,7 @@ class JoggingTimeByWeekController extends Controller
                 $connection->raw("SUM(minutes) AS minutes")
             )
             ->orderBy('day', 'desc')
+            ->where('user_id', $user->id)
             ->groupBy('WeekNumber')
             ->get();
 
