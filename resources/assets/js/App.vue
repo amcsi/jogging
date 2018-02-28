@@ -33,6 +33,7 @@
         token: localStorage.getItem('token') || '',
         userData: JSON.parse(localStorage.getItem('userData')) || '',
         loading: false,
+        offerRegistration: false,
       };
     },
     created() {
@@ -61,20 +62,20 @@
     mounted() {
       toastRegisterer(this.$refs.toast);
 
-      this.$root.$on('doLogin', async ({ email, password, vm }) => {
+      this.$root.$on('tokenReceived', async (token) => {
         this.loading = true;
         try {
-          const { data } = await axios.post('/api/login', {
-            password,
-            email,
-          });
-          const { access_token } = data;
-          this.setToken(access_token);
+          this.setToken(token);
           const { data: userData } = await axios.get('/api/users/me');
           this.setUserData(userData.data);
           toast.displaySuccess('Login successful!');
         } catch (error) {
-          this.$root.$emit('handleGenericAjaxError', error, 'Failed to log in', vm);
+          if (error.response.data.error === 'invalid_credentials') {
+            // Offer the user to log in.
+            this.offerRegistration = true;
+          } else {
+            this.$root.$emit('handleGenericAjaxError', error, 'Failed to fetch user data');
+          }
         }
         this.loading = false;
       }).$on('handleGenericAjaxError', (error, message = 'An error has occurred', vm = null) => {
@@ -88,7 +89,7 @@
           if (vm) {
             // Set validation errors on the component the event was fired from.
             try {
-              vm.errors = error.response.data.errors;
+              vm.errors = error.response.data.errors || {};
             } catch (e) {
             }
           }
