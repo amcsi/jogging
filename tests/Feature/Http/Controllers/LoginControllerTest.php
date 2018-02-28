@@ -21,7 +21,7 @@ final class LoginControllerTest extends TestCase
         $user = factory(User::class)->create();
 
         $response = $this->post('/api/login', [
-            'username' => $user->email,
+            'email' => $user->email,
             'password' => 'secret',
         ]);
 

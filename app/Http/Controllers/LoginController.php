@@ -27,7 +27,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->request->add([
-            'username' => $request->username,
+            'username' => $request->email,
             'password' => $request->password,
             'grant_type' => 'password',
             'client_id' => $this->client->id,

@@ -66,7 +66,7 @@
         try {
           const { data } = await axios.post('/api/login', {
             password,
-            username: email,
+            email,
           });
           const { access_token } = data;
           this.setToken(access_token);
