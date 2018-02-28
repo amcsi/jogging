@@ -68,7 +68,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof ApiException) {
             $responseData = [
                 'message' => $exception->getMessage(),
-                'errorCode' => $exception->getApiErrorCode(),
+                'error' => $exception->getApiErrorCode(),
             ];
             if ($exception instanceof ApiFieldErrorsException) {
                 // Try to match the format Laravel uses for showing field errors.
