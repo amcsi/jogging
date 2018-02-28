@@ -55,7 +55,7 @@
             return joggingTime;
           });
         } catch (error) {
-          this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
         }
         this.loading = false;
       },

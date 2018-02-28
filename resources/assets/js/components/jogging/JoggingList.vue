@@ -133,7 +133,7 @@
           this.paginationData = data.pagination;
           this.page = this.paginationData.current_page;
         } catch (error) {
-          this.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
+          this.$root.$emit('handleGenericAjaxError', error, 'Failed to fetch jogging times list');
         }
         this.loading = false;
       },
@@ -149,9 +149,7 @@
         } catch (error) {
           try {
             this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete jogging entry');
-          } catch (e) {
-          }
-          ;
+          } catch (e) {}
         }
       },
     },

@@ -79,6 +79,12 @@
         this.loading = false;
       }).$on('handleGenericAjaxError', (error, message = 'An error has occurred', vm = null) => {
         try {
+          try {
+            if (error.response.status === 401) {
+              // Unauthenticated.
+              this.setToken('');
+            }
+          } catch (e) {}
           if (vm) {
             // Set validation errors on the component the event was fired from.
             try {
