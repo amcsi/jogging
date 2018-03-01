@@ -6,7 +6,7 @@
             :label-cols="4"
             label="Email address"
         >
-            <b-form-input v-model.trim="email" required></b-form-input>
+            <b-form-input v-model.trim="email" required placeholder="E-mail address"></b-form-input>
 
             <form-field-errors :errors="errors.email" />
         </b-form-group>
@@ -15,7 +15,7 @@
             :label-cols="4"
             label="Password"
         >
-            <b-form-input type="password" v-model.trim="password" required></b-form-input>
+            <b-form-input type="password" v-model.trim="password" required placeholder="Password"></b-form-input>
 
             <form-field-errors :errors="errors.password" />
         </b-form-group>
@@ -30,11 +30,12 @@
 
                 <b-form-group horizontal
                     :label-cols="4"
-                    label="Password"
+                    label="Password confirmation"
                 >
                     <b-form-input type="password"
                         v-model.trim="password2"
-                        @keydown.native.prevent.enter="register"></b-form-input>
+                        @keydown.native.prevent.enter="register"
+                        placeholder="Password confirmation"></b-form-input>
 
                     <form-field-errors :errors="errors.password2" />
                 </b-form-group>
