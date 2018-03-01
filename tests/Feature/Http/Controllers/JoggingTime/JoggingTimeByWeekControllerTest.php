@@ -29,19 +29,19 @@ final class JoggingTimeByWeekControllerTest extends TestCase
 
         $format = 'Y-m-d';
         factory(JoggingTime::class)->create([
-            'user_id' => $this->admin->id,
+            'user_id' => $this->user->id,
             'day' => $testNow->format($format),
             'distance_m' => 300,
             'minutes' => 30,
         ]);
         factory(JoggingTime::class)->create([
-            'user_id' => $this->admin->id,
+            'user_id' => $this->user->id,
             'day' => (clone $testNow)->subDays(2)->format($format),
             'distance_m' => 200,
             'minutes' => 10,
         ]);
         factory(JoggingTime::class)->create([
-            'user_id' => $this->admin->id,
+            'user_id' => $this->user->id,
             'day' => (clone $testNow)->subWeeks(2)->format($format),
             'distance_m' => 1000,
             'minutes' => 90,
