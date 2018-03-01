@@ -77,9 +77,10 @@
                 ></b-pagination>
             </div>
         </div>
-        <div v-else>
+        <div v-else-if="!loading">
             <p>There are no jogging time entries.</p>
         </div>
+        <spinner v-else />
     </div>
 </template>
 
