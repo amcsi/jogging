@@ -51,6 +51,10 @@
           this.setUserData(null);
         }
       };
+      this.logOut = () => {
+        this.setToken('');
+        this.$router.push('/');
+      };
       this.setUserData = userData => {
         this.userData = userData;
         localStorage.setItem('userData', userData ? JSON.stringify(userData) : null);
@@ -83,7 +87,7 @@
           try {
             if (error.response.status === 401) {
               // Unauthenticated.
-              this.setToken('');
+              this.logOut();
             }
           } catch (e) {}
           if (vm) {
@@ -101,9 +105,7 @@
         } catch (e) {
         }
         toast.displayError(message);
-      }).$on('doLogout', () => {
-        this.setToken('');
-      });
+      }).$on('doLogout', this.logOut.bind(this));
     },
   };
 </script>
