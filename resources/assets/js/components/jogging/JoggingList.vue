@@ -14,8 +14,8 @@
                 <button v-if="dateFrom || dateTo" class="btn btn-warning" @click="clearDates">Clear dates</button>
                 <span v-else class="input-group-text">Filter by dates</span>
             </div>
-            <datepicker class="form-control" placeholder="From" v-model="dateFrom" />
-            <datepicker class="form-control" placeholder="To" v-model="dateTo" />
+            <datepicker style="flex: 1;" :classObject="['form-control']" placeholder="From" v-model="dateFrom" />
+            <datepicker style="flex: 1;" :classObject="['form-control']" placeholder="To" v-model="dateTo" />
         </div>
 
         <div v-if="joggingTimes.length">
