@@ -36,12 +36,13 @@
     props: ['userData'],
     computed: {
       links() {
-        const links = [
-          { uri: 'jogging-weekly', label: 'Weekly jogging' },
-        ];
-        const role = this.userData ? this.userData.role : 0;
-        if (isManager(role)) {
-          links.push({uri: 'users', label: 'User list'});
+        const links = [];
+        if (this.userData) {
+          links.push({ uri: 'jogging-weekly', label: 'Weekly jogging' });
+          const role = this.userData.role;
+          if (isManager(role)) {
+            links.push({ uri: 'users', label: 'User list' });
+          }
         }
         return links;
       }
