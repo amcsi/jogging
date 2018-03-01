@@ -7,7 +7,9 @@ use App\Common\JsonResponder;
 use App\Http\Controllers\Controller;
 use App\JoggingTime;
 use App\JoggingTime\JoggingTimeAggregateTransformer;
+use App\JoggingTime\JoggingTimeByWeekHoleIterator;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Connection;
 
 /**
@@ -33,6 +35,8 @@ class JoggingTimeByWeekController extends Controller
             ->groupBy('WeekNumber')
             ->get();
 
-        return JsonResponder::respond($result, $transformer);
+        $withHoles = new JoggingTimeByWeekHoleIterator(Carbon::now(), $result);
+
+        return JsonResponder::respond($withHoles, $transformer);
     }
 }

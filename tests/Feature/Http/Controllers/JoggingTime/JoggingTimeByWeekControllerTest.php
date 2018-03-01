@@ -49,7 +49,7 @@ final class JoggingTimeByWeekControllerTest extends TestCase
 
         $response = $this->get("/api/users/{$this->user->id}/jogging-times/by-week");
         $responseData = $this->assertSuccesfulResponseData($response);
-        $this->assertCount(2, $responseData);
+        $this->assertCount(3, $responseData);
         $this->assertArraySubset([
             'distance_m' => 500,
             'minutes' => 40,
@@ -57,10 +57,16 @@ final class JoggingTimeByWeekControllerTest extends TestCase
             'last_day' => '2018-01-13',
         ], $responseData[0]);
         $this->assertArraySubset([
+            'distance_m' => 0,
+            'minutes' => 0,
+            'first_day' => '2017-12-31',
+            'last_day' => '2018-01-06',
+        ], $responseData[1]);
+        $this->assertArraySubset([
             'distance_m' => 1000,
             'minutes' => 90,
             'first_day' => '2017-12-24',
             'last_day' => '2017-12-30',
-        ], $responseData[1]);
+        ], $responseData[2]);
     }
 }

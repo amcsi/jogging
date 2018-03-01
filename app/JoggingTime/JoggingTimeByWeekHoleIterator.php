@@ -16,9 +16,12 @@ class JoggingTimeByWeekHoleIterator extends \IteratorIterator
     private $currentDate;
     private $currentIndex;
 
-    public function __construct(Carbon $now, \Iterator $joggingTimes)
+    public function __construct(Carbon $now, iterable $joggingTimes)
     {
-        parent::__construct(new \LimitIterator($joggingTimes));
+        if ($joggingTimes instanceof \IteratorAggregate) {
+            $joggingTimes = $joggingTimes->getIterator();
+        }
+        parent::__construct($joggingTimes);
         $this->joggingTimesByWeek = $joggingTimes;
         $this->now = $now;
     }
