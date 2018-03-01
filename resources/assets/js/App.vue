@@ -108,6 +108,8 @@
   };
 </script>
 
-<style scoped>
-
+<style>
+    html {
+        overflow-y: scroll;
+    }
 </style>
