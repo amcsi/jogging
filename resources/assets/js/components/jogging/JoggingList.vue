@@ -51,7 +51,7 @@
                                 </td>
                                 <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
                                 <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
-                                <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60)) }}
+                                <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60) || 0) }}
                                     km/h
                                 </td>
                                 <td>
