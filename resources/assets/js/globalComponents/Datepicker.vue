@@ -5,6 +5,7 @@
         :value="date"
         @input="childInput"
         :class="className"
+        :input-props="{ placeholder: placeholder || 'Enter date' }"
     >
     </v-date-picker>
 </template>
@@ -17,7 +18,7 @@
    **/
   export default {
     name: 'datepicker',
-    props: ['value', 'input', 'name', 'class'],
+    props: ['value', 'input', 'name', 'class', 'placeholder'],
     computed: {
       date() {
         const valueDate = new Date(this.value);

@@ -11,7 +11,8 @@
 
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Filter by dates</span>
+                <button v-if="dateFrom || dateTo" class="btn btn-warning" @click="clearDates">Clear dates</button>
+                <span v-else class="input-group-text">Filter by dates</span>
             </div>
             <datepicker class="form-control" placeholder="From" v-model="dateFrom" />
             <datepicker class="form-control" placeholder="To" v-model="dateTo" />
@@ -51,7 +52,8 @@
                                 </td>
                                 <td>{{ formatFraction(joggingTime.distance_m / 1000) }} km</td>
                                 <td>{{ formatFraction(joggingTime.minutes) }} minutes</td>
-                                <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60) || 0) }}
+                                <td>{{ formatFraction((joggingTime.distance_m / 1000) / (joggingTime.minutes / 60) || 0)
+                                    }}
                                     km/h
                                 </td>
                                 <td>
@@ -154,8 +156,13 @@
         } catch (error) {
           try {
             this.$root.$emit('handleGenericAjaxError', error, 'Failed to delete jogging entry');
-          } catch (e) {}
+          } catch (e) {
+          }
         }
+      },
+      clearDates() {
+        this.dateFrom = '';
+        this.dateTo = '';
       },
     },
     mounted() {
