@@ -22,18 +22,18 @@
             <table class="table b-table">
                 <thead>
                 <tr>
-                    <th aria-colindex="1">ID</th>
-                    <th aria-colindex="2">Email</th>
+                    <th aria-colindex="1">Email</th>
+                    <th aria-colindex="2">ID</th>
                     <th aria-colindex="3">Role</th>
-                    <th aria-colindex="5">&nbsp</th>
+                    <th aria-colindex="4">&nbsp</th>
                 </tr>
                 </thead>
                 <tbody>
                 <template v-for="user in userList">
                     <transition name="fade">
                         <tr v-if="! user.deleted">
-                            <td>{{ user.id }}</td>
                             <td>{{ user.email }}</td>
+                            <td>{{ user.id }}</td>
                             <td>{{ user.role }}</td>
                             <td>
                                 <router-link v-if="currentUser.role === ROLE_ADMIN"
