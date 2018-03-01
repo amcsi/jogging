@@ -6,10 +6,10 @@
         <div>
             <jogging-time-entry :user="targetUser" />
 
-            <b-btn @click="$modal.show('joggingTimeEntry')">Add new jogging entry</b-btn>
+            <b-btn @click="$modal.show('joggingTimeEntry')" class="mb-2">Add new jogging entry</b-btn>
         </div>
 
-        <div class="input-group">
+        <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <button v-if="dateFrom || dateTo" class="btn btn-warning" @click="clearDates">Clear dates</button>
                 <span v-else class="input-group-text">Filter by dates</span>

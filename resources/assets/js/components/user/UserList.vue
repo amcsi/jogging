@@ -4,7 +4,7 @@
 
         <userEdit />
 
-        <b-form-input placeholder="Search" v-model="search" />
+        <b-form-input placeholder="Search" v-model="search" class="mb-3" />
 
         <b-pagination
             size="md"
