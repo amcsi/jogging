@@ -21,6 +21,7 @@
     computed: {
       date() {
         const valueDate = new Date(this.value);
+        console.info('date', this.value, 'valueDate', valueDate, 'new date', new Date(valueDate.getUTCFullYear(), valueDate.getUTCMonth(), valueDate.getUTCDate()));
         return new Date(valueDate.getUTCFullYear(), valueDate.getUTCMonth(), valueDate.getUTCDate());
       },
     },
@@ -30,8 +31,8 @@
           const month = ('0' + (value.getMonth() + 1)).slice(-2);
           const day = ('0' + (value.getDate())).slice(-2);
           value = `${value.getFullYear()}-${month}-${day}`;
+          this.$emit('input', value);
         }
-        this.$emit('input', value);
       },
     },
   };
