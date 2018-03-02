@@ -5,6 +5,7 @@
  */
 
 require('./bootstrap');
+import 'babel-polyfill';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 import VCalendar from 'v-calendar';
