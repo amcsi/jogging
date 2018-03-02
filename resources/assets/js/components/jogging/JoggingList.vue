@@ -169,7 +169,10 @@
     mounted() {
       this.reloadList();
       // Reload the list when a new entry is added.
-      this.$root.$on('joggingTimeChanged', this.reloadList.bind(this));
+      this.$root.$on('joggingTimeChanged', this.reloadList);
+    },
+    beforeDestroy() {
+      this.$root.$off('joggingTimeChanged', this.reloadList);
     },
   };
 </script>
