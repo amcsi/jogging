@@ -5,8 +5,8 @@
  */
 
 require('./bootstrap');
-import 'babel-polyfill';
 import axios from 'axios';
+import 'babel-polyfill';
 import BootstrapVue from 'bootstrap-vue';
 import VCalendar from 'v-calendar';
 import 'v-calendar/lib/v-calendar.min.css';
@@ -48,6 +48,16 @@ const router = new VueRouter({
     },
   ],
 });
+
+// https://github.com/vuejs/vue-router/issues/1849#issuecomment-340767577
+if ('-ms-scroll-limit' in document.documentElement.style && '-ms-ime-align' in document.documentElement.style) { // detect it's IE11
+  window.addEventListener("hashchange", function (event) {
+    var currentPath = window.location.hash.slice(1);
+    if (router.currentRoute.path !== currentPath) {
+      router.push(currentPath);
+    }
+  }, false);
+}
 
 axios.defaults.headers.common.Accept = 'application/json';
 
