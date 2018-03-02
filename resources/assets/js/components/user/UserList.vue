@@ -123,7 +123,10 @@
     mounted() {
       this.reloadList(this.page);
       // Reload the list when a new entry is added.
-      this.$root.$on('userChanged', this.reloadList.bind(this.page));
+      this.$root.$on('userChanged', this.reloadList);
+    },
+    beforeDestroy() {
+      this.$root.$off('userChanged', this.reloadList);
     },
   };
 </script>
