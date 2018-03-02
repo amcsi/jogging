@@ -1,5 +1,6 @@
 <template>
     <v-date-picker
+        v-if="show"
         :name="name"
         mode='single'
         :value="date"
@@ -18,10 +19,14 @@
   export default {
     name: 'datepicker',
     props: ['value', 'input', 'name', 'classObject', 'placeholder'],
+    data() {
+      return {
+        show: true,
+      };
+    },
     computed: {
       date() {
         const valueDate = new Date(this.value);
-        console.info('date', this.value, 'valueDate', valueDate, 'new date', new Date(valueDate.getUTCFullYear(), valueDate.getUTCMonth(), valueDate.getUTCDate()));
         return new Date(valueDate.getUTCFullYear(), valueDate.getUTCMonth(), valueDate.getUTCDate());
       },
     },
@@ -32,8 +37,22 @@
           const day = ('0' + (value.getDate())).slice(-2);
           value = `${value.getFullYear()}-${month}-${day}`;
           this.$emit('input', value);
+        } else {
+          // Value didn't change, but we need to force an update, otherwise the v-calendar doesn't close.
+          this.rerender();
         }
       },
+    },
+    mounted() {
+      /**
+       * https://github.com/vuejs/Discussion/issues/356#issuecomment-312529480
+       */
+      this.rerender = () => {
+        this.show = false;
+        this.$nextTick(() => {
+          this.show = true;
+        });
+      };
     },
   };
 </script>
