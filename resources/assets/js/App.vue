@@ -1,7 +1,5 @@
 <template>
     <div>
-        <vue-toast ref="toast" />
-
         <spinner v-if="loading" />
 
         <div v-else>
@@ -15,6 +13,8 @@
                 </div>
             </b-container>
         </div>
+
+        <vue-toast style="z-index: 1;" ref="toast" />
     </div>
 </template>
 
