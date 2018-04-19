@@ -60,7 +60,11 @@ RUN a2enmod rewrite
 
 RUN npm run production
 
-RUN mkdir -p storage && chmod -R a+rwx storage
+RUN [ \
+ "/bin/bash", \
+ "-c", \
+  "mkdir -p storage/framework/{cache,sessions,views} && chmod -R a+rwx storage/framework/{cache,sessions,views}" \
+]
 # The parent directory of the sqlite database must be writable.
 # https://github.com/wallabag/wallabag/issues/1845#issuecomment-205726683
 RUN chmod a+rw database/
