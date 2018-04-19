@@ -1,3 +1,5 @@
-# Jogging app (Toptal project by Attila Szeremi)
+# Jogging app
 
-URL: http://toptal-project.szeremi.org/
+Jogging app made with Laravel and VueJS
+
+URL: http://jogging.szeremi.org/
