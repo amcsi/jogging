@@ -7,15 +7,16 @@
 
         <b-collapse is-nav id="nav_collapse">
 
-            <b-navbar-nav v-if="links.length">
+            <b-navbar-nav>
                 <b-nav-item v-for="link in links" :key="link.uri + link.label" :href="'#/' + link.uri">{{ link.label
                     }}
                 </b-nav-item>
             </b-navbar-nav>
 
-            <b-navbar-nav class="ml-auto" v-if="userData">
+            <b-navbar-nav class="ml-auto">
+                <b-nav-item target="_blank" href="https://github.com/amcsi/jogging"><i class="fa fa-github"></i> Github</b-nav-item>
 
-                <b-nav-item-dropdown right>
+                <b-nav-item-dropdown v-if="userData">
                     <template slot="button-content">
                         <em>{{ userData.email }}</em>
                     </template>
