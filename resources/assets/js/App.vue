@@ -6,7 +6,7 @@
             <nav-bar :userData="userData" />
 
             <b-container>
-                <intro />
+                <intro v-if="!userData" />
 
                 <login-registration v-if="!userData" />
 
