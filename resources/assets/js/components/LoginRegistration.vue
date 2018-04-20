@@ -1,8 +1,6 @@
 <template>
     <form @submit.prevent="login" class="card">
-        <div class="card-header">
-            <h2>Login form</h2>
-        </div>
+        <h2 class="card-header">Login form</h2>
 
         <div class="card-body">
             <b-form-group horizontal
