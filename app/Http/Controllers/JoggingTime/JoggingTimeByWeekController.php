@@ -35,8 +35,6 @@ class JoggingTimeByWeekController extends Controller
             ->groupBy('WeekNumber')
             ->get();
 
-        $withHoles = new JoggingTimeByWeekHoleIterator(Carbon::now(), $result);
-
-        return JsonResponder::respond($withHoles, $transformer);
+        return JsonResponder::respond($result, $transformer);
     }
 }
