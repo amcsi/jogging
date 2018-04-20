@@ -6,6 +6,8 @@
             <nav-bar :userData="userData" />
 
             <b-container>
+                <intro />
+
                 <login-registration v-if="!userData" />
 
                 <div v-if="userData">
@@ -24,10 +26,11 @@
   import LoginRegistration from './components/LoginRegistration';
   import NavBar from './components/NavBar';
   import toastRegisterer from './toastRegisterer';
+  import Intro from './components/Intro';
 
   export default {
     name: 'app',
-    components: { LoginRegistration, vueToast, NavBar },
+    components: { Intro, LoginRegistration, vueToast, NavBar },
     data() {
       return {
         token: localStorage.getItem('token') || '',
