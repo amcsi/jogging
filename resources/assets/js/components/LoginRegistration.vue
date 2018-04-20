@@ -1,50 +1,54 @@
 <template>
-    <form @submit.prevent="login">
-        <h2>Login form</h2>
-
-        <b-form-group horizontal
-            :label-cols="4"
-            label="Email address"
-        >
-            <b-form-input v-model.trim="email" required placeholder="E-mail address"></b-form-input>
-
-            <form-field-errors :errors="errors.email" />
-        </b-form-group>
-
-        <b-form-group horizontal
-            :label-cols="4"
-            label="Password"
-        >
-            <b-form-input type="password" v-model.trim="password" required placeholder="Password"></b-form-input>
-
-            <form-field-errors :errors="errors.password" />
-        </b-form-group>
-
-        <div v-if="! loading">
-            <div v-if="!offerRegistration">
-                <b-btn variant="primary" type="submit">Login / Register</b-btn>
-            </div>
-
-            <div v-else>
-                <b-btn variant="primary" type="submit">Login</b-btn>
-
-                <b-form-group horizontal
-                    :label-cols="4"
-                    label="Password confirmation"
-                >
-                    <b-form-input type="password"
-                        v-model.trim="password2"
-                        @keydown.native.prevent.enter="register"
-                        placeholder="Password confirmation"></b-form-input>
-
-                    <form-field-errors :errors="errors.password2" />
-                </b-form-group>
-
-                <b-btn variant="primary" type="submit" @click.prevent="register">Register</b-btn>
-            </div>
+    <form @submit.prevent="login" class="card">
+        <div class="card-header">
+            <h2>Login form</h2>
         </div>
-        <div v-else>
-            <spinner />
+
+        <div class="card-body">
+            <b-form-group horizontal
+                :label-cols="4"
+                label="Email address"
+            >
+                <b-form-input v-model.trim="email" required placeholder="E-mail address"></b-form-input>
+
+                <form-field-errors :errors="errors.email" />
+            </b-form-group>
+
+            <b-form-group horizontal
+                :label-cols="4"
+                label="Password"
+            >
+                <b-form-input type="password" v-model.trim="password" required placeholder="Password"></b-form-input>
+
+                <form-field-errors :errors="errors.password" />
+            </b-form-group>
+
+            <div v-if="! loading">
+                <div v-if="!offerRegistration">
+                    <b-btn variant="primary" type="submit">Login / Register</b-btn>
+                </div>
+
+                <div v-else>
+                    <b-btn variant="primary" type="submit">Login</b-btn>
+
+                    <b-form-group horizontal
+                        :label-cols="4"
+                        label="Password confirmation"
+                    >
+                        <b-form-input type="password"
+                            v-model.trim="password2"
+                            @keydown.native.prevent.enter="register"
+                            placeholder="Password confirmation"></b-form-input>
+
+                        <form-field-errors :errors="errors.password2" />
+                    </b-form-group>
+
+                    <b-btn variant="primary" type="submit" @click.prevent="register">Register</b-btn>
+                </div>
+            </div>
+            <div v-else>
+                <spinner />
+            </div>
         </div>
     </form>
 </template>
