@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:7.2
 MAINTAINER  Attila Szeremi <attila+webdev@szeremi.com>
 WORKDIR /var/www
 RUN cd /var/www
@@ -24,6 +24,8 @@ COPY bin/docker-php-pecl-install /usr/local/bin/
 # PHP extensions
 RUN docker-php-ext-install \
   zip
+
+RUN docker-php-pecl-install swoole
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
@@ -54,10 +56,6 @@ RUN mkdir -p bootstrap/cache && chmod a+rwx bootstrap/cache
 # This time, optimize and run hooks as well.
 RUN composer install --optimize-autoloader
 
-COPY config/docker/apache.conf /etc/apache2/sites-available/000-default.conf
-
-RUN a2enmod rewrite
-
 RUN npm run production
 
 RUN [ \
@@ -69,5 +67,5 @@ RUN [ \
 # https://github.com/wallabag/wallabag/issues/1845#issuecomment-205726683
 RUN chmod a+rw database/
 
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+CMD ["php", "artisan", "swoole:http", "start"]
 
