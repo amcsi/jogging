@@ -67,5 +67,5 @@ RUN [ \
 # https://github.com/wallabag/wallabag/issues/1845#issuecomment-205726683
 RUN chmod a+rw database/
 
-CMD ["php", "artisan", "swoole:http", "start"]
+CMD ["bin/start.sh"]
 
