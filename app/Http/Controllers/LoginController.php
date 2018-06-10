@@ -53,7 +53,7 @@ class LoginController extends Controller
             'POST'
         );
 
-        return $this->router->dispatch($proxy);
+        return $this->dispatchRequest($proxy);
     }
 
     public function refresh(Request $request)
@@ -70,6 +70,35 @@ class LoginController extends Controller
             'POST'
         );
 
-        return $this->router->dispatch($proxy);
+        return $this->dispatchRequest($proxy);
+    }
+
+    /**
+     * Dispatches a request in a way that the container gets unset from the route to work with Swoole.
+     *
+     * https://github.com/swooletw/laravel-swoole/issues/74#issuecomment-395798995
+     *
+     * @param Request $proxy
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    private function dispatchRequest(Request $proxy)
+    {
+        $router = $this->router;
+        $application = app();
+        $closure = function () use ($application, $proxy) {
+            /** @var @var Router $this */
+            $route = $this->routes->match($proxy);
+            // clear resolved controller
+            if (property_exists($route, 'container')) {
+                $route->controller = null;
+            }
+            // rebind matched route's container
+            $route->setContainer($application);
+        };
+
+        $resetRouter = $closure->bindTo($router, $router);
+        $resetRouter();
+
+        return $router->dispatch($proxy);
     }
 }
