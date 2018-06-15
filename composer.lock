@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "576a56c3d3b2f086d4f64fe62faa099b",
+    "content-hash": "9dfec9cfe55ef1edb179895c25dbc4a2",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -2041,16 +2041,16 @@
         },
         {
             "name": "swooletw/laravel-swoole",
-            "version": "v2.3.9",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swooletw/laravel-swoole.git",
-                "reference": "d0700ce77ec32c17b1886b7ebf98dfdcc26bd0b1"
+                "reference": "7e1a9cb7eec5d525b538df47d8983175adeac8c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swooletw/laravel-swoole/zipball/d0700ce77ec32c17b1886b7ebf98dfdcc26bd0b1",
-                "reference": "d0700ce77ec32c17b1886b7ebf98dfdcc26bd0b1",
+                "url": "https://api.github.com/repos/swooletw/laravel-swoole/zipball/7e1a9cb7eec5d525b538df47d8983175adeac8c8",
+                "reference": "7e1a9cb7eec5d525b538df47d8983175adeac8c8",
                 "shasum": ""
             },
             "require": {
@@ -2112,7 +2112,7 @@
                 "server",
                 "swoole"
             ],
-            "time": "2018-05-26T14:08:06+00:00"
+            "time": "2018-06-12T17:24:19+00:00"
         },
         {
             "name": "symfony/console",

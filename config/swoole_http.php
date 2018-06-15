@@ -63,7 +63,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'instances' => [
-        //
+        'datatables.request',
     ],
 
     /*
@@ -73,6 +73,14 @@ return [
     */
     'providers' => [
         Illuminate\Pagination\PaginationServiceProvider::class,
+        Illuminate\Auth\AuthServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        /*
+         * This must appear after Illuminate\Auth\AuthServiceProvider.
+         *
+         * https://github.com/swooletw/laravel-swoole/issues/74#issuecomment-397490515
+         */
+        Laravel\Passport\PassportServiceProvider::class,
     ],
 
     /*
