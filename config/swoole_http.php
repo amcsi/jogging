@@ -74,6 +74,8 @@ return [
     'providers' => [
         Illuminate\Pagination\PaginationServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
+        Illuminate\Auth\AuthServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
     ],
 
     /*
