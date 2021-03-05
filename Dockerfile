@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
   # For composer
   zlib1g-dev
 
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
   apt-get update && \
   apt-get install -y nodejs && \
   node --version && \
