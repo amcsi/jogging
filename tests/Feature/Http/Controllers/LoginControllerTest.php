@@ -26,6 +26,8 @@ final class LoginControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
+        $oldErrorReporting = error_reporting(error_reporting() & ~E_USER_DEPRECATED);
+
         $response = $this->post('/api/login', [
             'email' => $user->email,
             'password' => 'secret',
@@ -35,6 +37,8 @@ final class LoginControllerTest extends TestCase
         $data = $response->json();
         self::assertInternalType('string', $data['access_token']);
         self::assertInternalType('string', $data['refresh_token']);
+
+        error_reporting($oldErrorReporting);
     }
 
     public function test404WhenEmailNotFound(): void
