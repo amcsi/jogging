@@ -26,7 +26,7 @@ final class LoginControllerTest extends TestCase
 
     public function testLogin()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $oldErrorReporting = error_reporting(error_reporting() & ~E_USER_DEPRECATED);
 
@@ -37,8 +37,8 @@ final class LoginControllerTest extends TestCase
 
         $response->assertStatus(200);
         $data = $response->json();
-        self::assertInternalType('string', $data['access_token']);
-        self::assertInternalType('string', $data['refresh_token']);
+        self::assertIsString($data['access_token']);
+        self::assertIsString($data['refresh_token']);
 
         error_reporting($oldErrorReporting);
     }

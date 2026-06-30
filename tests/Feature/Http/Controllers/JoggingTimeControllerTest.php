@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers;
 
 use App\JoggingTime;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -60,7 +61,13 @@ final class JoggingTimeControllerTest extends TestCase
     {
         Passport::actingAs($this->user);
 
-        factory(JoggingTime::class, 5)->create(['user_id' => $this->user->id]);
+        $date = new Carbon('-1 day');
+        for ($i = 0; $i < 5; $i++) {
+            JoggingTime::factory()->create([
+                'user_id' => $this->user->id,
+                'day' => (clone $date)->subDays($i)->format('Y-m-d'),
+            ]);
+        }
 
         $response = $this->get("/api/users/{$this->user->id}/jogging-times?limit=2");
 
@@ -95,7 +102,7 @@ final class JoggingTimeControllerTest extends TestCase
     {
         Passport::actingAs($this->admin);
 
-        $joggingTime = factory(JoggingTime::class)->create(['user_id' => $this->admin->id]);
+        $joggingTime = JoggingTime::factory()->create(['user_id' => $this->admin->id]);
 
         $this->assertCount(1, JoggingTime::all());
 
@@ -109,7 +116,7 @@ final class JoggingTimeControllerTest extends TestCase
     {
         Passport::actingAs($this->admin);
 
-        $joggingTime = factory(JoggingTime::class)->create(['user_id' => $this->admin->id]);
+        $joggingTime = JoggingTime::factory()->create(['user_id' => $this->admin->id]);
         $joggingTimeId = $joggingTime->id;
 
         $this->assertCount(1, JoggingTime::all());

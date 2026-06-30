@@ -1,10 +1,11 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\JoggingTime;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Collection;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $joggingTimes = [];
 
         // Create many users.
-        factory(User::class, 50)->create()->each(function (User $user) use (&$joggingTimes) {
+        User::factory()->count(50)->create()->each(function (User $user) use (&$joggingTimes) {
             if ($user->id == 1) {
                 // The first user should have a fixed email for demoing purposes.
                 $user->email = 'admin@example.com';
@@ -35,9 +36,9 @@ class DatabaseSeeder extends Seeder
                 }
                 $_date = clone $date;
                 $_date->subDays($i);
-                $joggingTime = factory(JoggingTime::class)->make([
+                $joggingTime = JoggingTime::factory()->make([
                     'user_id' => $user->id,
-                    'day' => $_date->format('Y-m-d')
+                    'day' => $_date->format('Y-m-d'),
                 ])->toArray();
                 $joggingTimes[] = $joggingTime;
             }

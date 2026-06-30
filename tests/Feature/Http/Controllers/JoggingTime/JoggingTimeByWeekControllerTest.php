@@ -28,19 +28,19 @@ final class JoggingTimeByWeekControllerTest extends TestCase
         Carbon::setTestNow($testNow);
 
         $format = 'Y-m-d';
-        factory(JoggingTime::class)->create([
+        JoggingTime::factory()->create([
             'user_id' => $this->user->id,
             'day' => $testNow->format($format),
             'distance_m' => 300,
             'minutes' => 30,
         ]);
-        factory(JoggingTime::class)->create([
+        JoggingTime::factory()->create([
             'user_id' => $this->user->id,
             'day' => (clone $testNow)->subDays(2)->format($format),
             'distance_m' => 200,
             'minutes' => 10,
         ]);
-        factory(JoggingTime::class)->create([
+        JoggingTime::factory()->create([
             'user_id' => $this->user->id,
             'day' => (clone $testNow)->subWeeks(2)->format($format),
             'distance_m' => 1000,
@@ -50,17 +50,13 @@ final class JoggingTimeByWeekControllerTest extends TestCase
         $response = $this->get("/api/users/{$this->user->id}/jogging-times/by-week");
         $responseData = $this->assertSuccesfulResponseData($response);
         $this->assertCount(2, $responseData);
-        $this->assertArraySubset([
-            'distance_m' => 500,
-            'minutes' => 40,
-            'first_day' => '2018-01-07',
-            'last_day' => '2018-01-13',
-        ], $responseData[0]);
-        $this->assertArraySubset([
-            'distance_m' => 1000,
-            'minutes' => 90,
-            'first_day' => '2017-12-24',
-            'last_day' => '2017-12-30',
-        ], $responseData[1]);
+        $this->assertSame(500, $responseData[0]['distance_m']);
+        $this->assertSame(40, $responseData[0]['minutes']);
+        $this->assertSame('2018-01-07', $responseData[0]['first_day']);
+        $this->assertSame('2018-01-13', $responseData[0]['last_day']);
+        $this->assertSame(1000, $responseData[1]['distance_m']);
+        $this->assertSame(90, $responseData[1]['minutes']);
+        $this->assertSame('2017-12-24', $responseData[1]['first_day']);
+        $this->assertSame('2017-12-30', $responseData[1]['last_day']);
     }
 }

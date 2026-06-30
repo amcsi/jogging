@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\JoggingTime\JoggingTimeByWeekController;
+use App\Http\Controllers\JoggingTimeController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -12,24 +18,24 @@
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::put('/jogging-times/{joggingTime}', 'JoggingTimeController@update');
-    Route::delete('/jogging-times/{joggingTime}', 'JoggingTimeController@destroy');
+    Route::put('/jogging-times/{joggingTime}', [JoggingTimeController::class, 'update']);
+    Route::delete('/jogging-times/{joggingTime}', [JoggingTimeController::class, 'destroy']);
 
-    Route::get('/users', 'UserController@index');
-    Route::get('/users/me', 'UserController@me');
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/me', [UserController::class, 'me']);
     Route::prefix('/users/{user}')->group(function () {
-        Route::get('/', 'UserController@show');
+        Route::get('/', [UserController::class, 'show']);
         Route::prefix('jogging-times')->group(function () {
-            Route::get('/', 'JoggingTimeController@index');
-            Route::get('/by-week', 'JoggingTime\JoggingTimeByWeekController@index');
-            Route::post('/', 'JoggingTimeController@store');
+            Route::get('/', [JoggingTimeController::class, 'index']);
+            Route::get('/by-week', [JoggingTimeByWeekController::class, 'index']);
+            Route::post('/', [JoggingTimeController::class, 'store']);
         });
     });
-    Route::put('/users/{user}', 'UserController@update');
-    Route::delete('/users/{user}', 'UserController@destroy');
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });
 
-Route::post('/users', 'UserController@store');
+Route::post('/users', [UserController::class, 'store']);
 
-Route::post('/login', 'LoginController@login');
-Route::post('/login/refresh', 'LoginController@refresh');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login/refresh', [LoginController::class, 'refresh']);

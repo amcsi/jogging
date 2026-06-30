@@ -54,7 +54,7 @@ class UserControllerTest extends TestCase
 
     public function testRegularUserCannotListUsers(): void
     {
-        $user = factory(User::class)->create(['role' => Role::USER]);
+        $user = User::factory()->create(['role' => Role::USER]);
 
         Passport::actingAs($user);
 
