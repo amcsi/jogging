@@ -15,12 +15,8 @@ trait UserFixtures
     /** @var User */
     protected $user;
 
-    /**
-     * @before
-     */
-    public function setupUserFixtures(): void
+    public function setUpUserFixtures(): void
     {
-        parent::setUp();
         $this->admin = User::factory()->create(['email' => 'admin@example.com', 'role' => Role::ADMIN]);
         $this->manager = User::factory()->create(['email' => 'manager@example.com', 'role' => Role::MANAGER]);
         $this->user = User::factory()->create(['email' => 'user@example.com', 'role' => Role::USER]);
