@@ -1,4 +1,4 @@
-FROM php:7.3
+FROM php:8.0
 MAINTAINER  Attila Szeremi <attila+webdev@szeremi.com>
 WORKDIR /var/www
 RUN cd /var/www
