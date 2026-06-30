@@ -1,5 +1,2 @@
 #!/bin/bash
-# Remove old pid file if it exists.
-rm -f storage/logs/swoole_http.pid
-
-php artisan swoole:http start
+php artisan octane:start --server=swoole --host=0.0.0.0 --port=1215

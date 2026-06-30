@@ -9,18 +9,14 @@ use App\Common\ApiExceptionCode;
 use App\User;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LoginController extends Controller
 {
     private $client;
     private $clientId;
     private $clientSecret;
-    private $databaseManager;
-    private $router;
 
-    public function __construct(DatabaseManager $databaseManager, Router $router)
+    public function __construct(DatabaseManager $databaseManager)
     {
         $this->client = $databaseManager->table('oauth_clients')
             ->where('password_client', 1)
@@ -29,8 +25,6 @@ class LoginController extends Controller
 
         $this->clientId = config('services.passport.password_client_id') ?? $this->client?->id;
         $this->clientSecret = config('services.passport.password_client_secret') ?? $this->client?->secret;
-        $this->databaseManager = $databaseManager;
-        $this->router = $router;
     }
 
     public function login(Request $request)
@@ -54,8 +48,9 @@ class LoginController extends Controller
         ]);
 
         $proxy = Request::create(
-            'oauth/token',
-            'POST'
+            '/oauth/token',
+            'POST',
+            $request->request->all()
         );
 
         return $this->dispatchRequest($proxy);
@@ -72,38 +67,19 @@ class LoginController extends Controller
 
         $proxy = Request::create(
             '/oauth/token',
-            'POST'
+            'POST',
+            $request->request->all()
         );
 
         return $this->dispatchRequest($proxy);
     }
 
     /**
-     * Dispatches a request in a way that the container gets unset from the route to work with Swoole.
-     *
-     * https://github.com/swooletw/laravel-swoole/issues/74#issuecomment-395798995
-     *
      * @param Request $proxy
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     private function dispatchRequest(Request $proxy)
     {
-        $router = $this->router;
-        $application = app();
-        $closure = function () use ($application, $proxy) {
-            /** @var @var Router $this */
-            $route = $this->routes->match($proxy);
-            // clear resolved controller
-            if (property_exists($route, 'container')) {
-                $route->controller = null;
-            }
-            // rebind matched route's container
-            $route->setContainer($application);
-        };
-
-        $resetRouter = $closure->bindTo($router, $router);
-        $resetRouter();
-
-        return $router->dispatch($proxy);
+        return app()->handle($proxy);
     }
 }
