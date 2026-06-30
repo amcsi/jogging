@@ -7,7 +7,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Common\ApiExceptionCode;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
+use Laravel\Passport\ClientRepository;
 use Tests\TestCase;
 
 final class LoginControllerTest extends TestCase
@@ -18,10 +18,12 @@ final class LoginControllerTest extends TestCase
     {
         parent::setUp();
 
-        // create password grant client
-        // https://laravel.com/docs/5.4/passport#password-grant-tokens
-        // Laravel 5.7 mocks Artisan output by default; use Artisan::call instead of $this->artisan()
-        Artisan::call('passport:client', ['--password' => true, '--no-interaction' => true]);
+        $client = app(ClientRepository::class)->createPasswordGrantClient('Laravel', 'users');
+
+        config([
+            'services.passport.password_client_id' => $client->id,
+            'services.passport.password_client_secret' => $client->plainSecret,
+        ]);
     }
 
     public function testLogin()

@@ -29,6 +29,17 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::enablePasswordGrant();
+        Passport::$clientUuids = false;
+
+        $this->ensurePassportKeyPermissions();
     }
 
+    private function ensurePassportKeyPermissions(): void
+    {
+        foreach ([storage_path('oauth-private.key'), storage_path('oauth-public.key')] as $path) {
+            if (is_file($path)) {
+                @chmod($path, 0600);
+            }
+        }
+    }
 }

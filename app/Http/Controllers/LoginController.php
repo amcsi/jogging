@@ -15,6 +15,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class LoginController extends Controller
 {
     private $client;
+    private $clientId;
+    private $clientSecret;
     private $databaseManager;
     private $router;
 
@@ -24,6 +26,9 @@ class LoginController extends Controller
             ->where('password_client', 1)
             ->where('revoked', 0)
             ->first();
+
+        $this->clientId = config('services.passport.password_client_id') ?? $this->client?->id;
+        $this->clientSecret = config('services.passport.password_client_secret') ?? $this->client?->secret;
         $this->databaseManager = $databaseManager;
         $this->router = $router;
     }
@@ -43,8 +48,8 @@ class LoginController extends Controller
             'username' => $data['email'],
             'password' => $data['password'],
             'grant_type' => 'password',
-            'client_id' => $this->client->id,
-            'client_secret' => $this->client->secret,
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
             'scope' => '*'
         ]);
 
@@ -61,8 +66,8 @@ class LoginController extends Controller
         $request->request->add([
             'grant_type' => 'refresh_token',
             'refresh_token' => $request->refresh_token,
-            'client_id' => $this->client->id,
-            'client_secret' => $this->client->secret,
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
         ]);
 
         $proxy = Request::create(
