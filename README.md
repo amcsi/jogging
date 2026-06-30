@@ -1,6 +1,6 @@
 # Jogging app
 
-[![Build Status](https://travis-ci.org/amcsi/jogging.png?branch=master)](https://travis-ci.org/amcsi/jogging)
+[![CI](https://github.com/amcsi/jogging/actions/workflows/ci.yml/badge.svg)](https://github.com/amcsi/jogging/actions/workflows/ci.yml)
 
 Jogging app made with Laravel (Swoole) and VueJS.
 
