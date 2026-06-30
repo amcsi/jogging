@@ -30,7 +30,7 @@ class JoggingTimeByWeekHoleIterator extends \IteratorIterator
     {
         parent::rewind();
         $this->currentIndex = 0;
-        $this->currentDate = (clone $this->now)->startOfWeek()->setTime(0, 0, 0);
+        $this->currentDate = (clone $this->now)->startOfWeek(Carbon::SUNDAY)->setTime(0, 0, 0);
     }
 
     public function current(): mixed

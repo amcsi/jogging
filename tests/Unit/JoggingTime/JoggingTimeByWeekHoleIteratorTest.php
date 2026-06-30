@@ -14,7 +14,6 @@ class JoggingTimeByWeekHoleIteratorTest extends TestCase
 {
     public function testIterateWithHoles(): void
     {
-        Carbon::setWeekStartsAt(Carbon::SUNDAY);
         // Saturday.
         $testNow = Carbon::create(2018, 1, 13, null, null, null, 'UTC');
 
