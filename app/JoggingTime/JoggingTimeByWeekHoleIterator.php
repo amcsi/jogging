@@ -26,14 +26,14 @@ class JoggingTimeByWeekHoleIterator extends \IteratorIterator
         $this->now = $now;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         parent::rewind();
         $this->currentIndex = 0;
         $this->currentDate = (clone $this->now)->startOfWeek()->setTime(0, 0, 0);
     }
 
-    public function current()
+    public function current(): mixed
     {
         $innerCurrent = parent::current();
         if ($innerCurrent->first_day >= ($firstDayFormatted = $this->currentDate->format('Y-m-d'))) {
