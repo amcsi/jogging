@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY bin/docker-php-pecl-install /usr/local/bin/
 
-RUN docker-php-ext-install zip
+RUN docker-php-ext-install zip pcntl
 
 RUN docker-php-pecl-install swoole
 
