@@ -18,13 +18,22 @@ class LoginController extends Controller
 
     public function __construct(DatabaseManager $databaseManager)
     {
-        $this->client = $databaseManager->table('oauth_clients')
+        $query = $databaseManager->table('oauth_clients')
             ->where('password_client', 1)
-            ->where('revoked', 0)
-            ->first();
+            ->where('revoked', 0);
+
+        if ($configuredClientId = config('services.passport.password_client_id')) {
+            $query->where('id', $configuredClientId);
+        }
+
+        $this->client = $query->orderBy('id')->first();
 
         $this->clientId = config('services.passport.password_client_id') ?? $this->client?->id;
-        $this->clientSecret = config('services.passport.password_client_secret') ?? $this->client?->secret;
+
+        $configuredSecret = config('services.passport.password_client_secret');
+        $databaseSecret = $this->client?->secret;
+        $this->clientSecret = $configuredSecret
+            ?? (is_string($databaseSecret) && ! str_starts_with($databaseSecret, '$2y$') ? $databaseSecret : null);
     }
 
     public function login(Request $request)
