@@ -1,71 +1,72 @@
+# Build frontend assets on a fixed Node 14 image (Laravel Mix 2 / node-sass).
+FROM node:14-bullseye-slim AS frontend
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    make \
+    g++ \
+    && ln -s /usr/bin/python3 /usr/bin/python \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY resources/assets resources/assets
+COPY webpack.mix.js .
+RUN mkdir -p public
+RUN npm run production \
+    && node -e "const fs=require('fs'); fs.writeFileSync('public/mix-manifest.json', JSON.stringify({'/js/app.js':'/js/app.js','/css/app.css':'/css/app.css'}));"
+
 FROM php:8.2
-MAINTAINER  Attila Szeremi <attila+webdev@szeremi.com>
+LABEL maintainer="Attila Szeremi <attila+webdev@szeremi.com>"
+
 WORKDIR /var/www
-RUN cd /var/www
 
-RUN apt-get update && apt-get install -y \
-  # For installing node
-  curl \
-  wget \
-  gnupg \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    $PHPIZE_DEPS \
+    curl \
+    git \
+    unzip \
+    zlib1g-dev \
+    libzip-dev \
+    libbrotli-dev \
+    libssl-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
-  # For composer
-  zlib1g-dev
-
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-  apt-get update && \
-  apt-get install -y nodejs && \
-  node --version && \
-  npm --version
-
-# This includes the docker-php-pecl-install executable
 COPY bin/docker-php-pecl-install /usr/local/bin/
 
-# PHP extensions
-RUN docker-php-ext-install \
-  zip
+RUN docker-php-ext-install zip
 
 RUN docker-php-pecl-install swoole
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer --version
 
-COPY composer.json .
-COPY composer.lock .
+COPY composer.json composer.lock ./
 
-# These directories need to exist if we composer install without hooks/scripts.
-RUN mkdir -p database/seeds
-RUN mkdir -p database/factories
+RUN mkdir -p database/seeders database/factories
 
-# Do not run hooks, because they require the project files to already be there.
-# We want to be able to avoid complete (slow) composer installs in the Dockerfile with caching if possible.
-RUN composer install --no-scripts
+RUN composer install --no-scripts --no-interaction --prefer-dist
 
-COPY package.json .
-COPY package-lock.json .
-RUN npm install
-
+COPY package.json package-lock.json ./
 COPY resources/assets resources/assets
-COPY webpack.mix.js .
-RUN npm run production
+COPY webpack.mix.js ./
+
+COPY --from=frontend /app/public/js public/js
+COPY --from=frontend /app/public/css public/css
+COPY --from=frontend /app/public/mix-manifest.json public/mix-manifest.json
 
 COPY . .
 
 RUN mkdir -p bootstrap/cache && chmod a+rwx bootstrap/cache
 
-# This time, optimize and run hooks as well.
-RUN composer install --optimize-autoloader
+RUN composer install --optimize-autoloader --no-interaction
 
-RUN npm run production
+RUN mkdir -p storage/framework/{cache,sessions,views} \
+    && chmod -R a+rwx storage/framework/{cache,sessions,views}
 
-RUN [ \
- "/bin/bash", \
- "-c", \
-  "mkdir -p storage/framework/{cache,sessions,views} && chmod -R a+rwx storage/framework/{cache,sessions,views}" \
-]
-# The parent directory of the sqlite database must be writable.
-# https://github.com/wallabag/wallabag/issues/1845#issuecomment-205726683
 RUN chmod a+rw database/
 
 CMD ["bin/start.sh"]
-
