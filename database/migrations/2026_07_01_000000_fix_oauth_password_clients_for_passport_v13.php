@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Passport 13 treats unowned confidential password clients as client_credentials
+     * capable, which breaks bearer auth when oauth user id equals client id.
+     */
     public function up(): void
     {
         if (! Schema::hasTable('oauth_clients') || ! Schema::hasColumn('oauth_clients', 'password_client')) {
@@ -18,18 +22,26 @@ return new class extends Migration
             return;
         }
 
+        $columns = ['id'];
+        if (Schema::hasColumn('oauth_clients', 'provider')) {
+            $columns[] = 'provider';
+        }
+
         $passwordClients = DB::table('oauth_clients')
             ->where('password_client', 1)
             ->whereNull('user_id')
-            ->get(['id', 'provider']);
+            ->get($columns);
 
         foreach ($passwordClients as $client) {
+            $updates = ['user_id' => $ownerId];
+
+            if (Schema::hasColumn('oauth_clients', 'provider')) {
+                $updates['provider'] = $client->provider ?? 'users';
+            }
+
             DB::table('oauth_clients')
                 ->where('id', $client->id)
-                ->update([
-                    'user_id' => $ownerId,
-                    'provider' => $client->provider ?? 'users',
-                ]);
+                ->update($updates);
         }
     }
 
